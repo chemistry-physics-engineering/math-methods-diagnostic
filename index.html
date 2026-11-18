@@ -93,6 +93,8 @@ button.quiet { color: var(--muted); }
 .mj mjx-container { margin: 0 !important; }
 .vecprev { display: inline-flex; align-items: center; gap: 2px; font-family: var(--f-math); font-size: 1.2rem; }
 .math sup { font-size: .7em; }
+.mj-inline mjx-container { margin: 0 .1em !important; }
+.prompt .mj-inline svg { vertical-align: middle; }
 .msg { min-height: 1.4em; margin: 6px 0 10px; }
 .msg.err { color: var(--bad); }
 .tablewrap { overflow-x: auto; }
@@ -147,121 +149,121 @@ var Calc3Diag = (function () {
 
   var ITEMS = [
     // ==== 1 Calculus and Series Readiness
-    mc(1, 1, 'A', 'What is d/dx (e^(3x))?', '3e^(3x)', ['e^(3x)', '3e^(2x)', 'e^(3x)/3']),
-    mc(1, 1, 'B', 'The Maclaurin series of eˣ begins:', '1 + x + x²/2 + x³/6 + …', ['x + x²/2 + x³/3 + …', '1 − x + x²/2 − x³/6 + …', '1 + x + x² + x³ + …']),
-    num(1, 2, 'A', 'Evaluate ∫₀¹ 2x·e^(x²) dx.', 'e-1'),
-    num(1, 2, 'B', 'Let f(x) = x ln x. Find f′(e).', '2'),
-    sym(1, 2, 'Let f(x) = x²e^(−x). Find f′(x).', 'f′(x)', ['x'], '2x*e^(-x)-x^2*e^(-x)'),
-    num(1, 3, 'A', 'Find the coefficient of x³ in the Maclaurin series of sin(2x).', '-4/3'),
-    num(1, 3, 'B', 'Evaluate ∫₀^π x sin x dx.', 'pi'),
-    sym(1, 3, 'For |x| < 2, find the sum of the series Σₙ₌₀^∞ (x/2)ⁿ.', 'S', ['x'], '2/(2-x)', { ranges: { x: [-1.5, 1.5] } }),
-    num(1, 4, 'A', 'Find the radius of convergence of Σₙ₌₁^∞ n xⁿ / 3ⁿ.', '3'),
-    num(1, 4, 'B', 'Evaluate ∫₀^∞ x e^(−2x) dx.', '1/4'),
-    sym(1, 4, 'Write f(x) = 1/(1 − 3x) as Σ aₙ xⁿ. Find aₙ in terms of n.', 'aₙ', ['n'], '3^n'),
+    mc(1, 1, 'A', 'What is $\\dfrac{d}{dx}\\,e^{3x}$?', '$3e^{3x}$', ['$e^{3x}$', '$3e^{2x}$', '$\\dfrac{e^{3x}}{3}$']),
+    mc(1, 1, 'B', 'The Maclaurin series of $e^x$ begins:', '$1 + x + \\frac{x^2}{2} + \\frac{x^3}{6} + \\cdots$', ['$x + \\frac{x^2}{2} + \\frac{x^3}{3} + \\cdots$', '$1 - x + \\frac{x^2}{2} - \\frac{x^3}{6} + \\cdots$', '$1 + x + x^2 + x^3 + \\cdots$']),
+    num(1, 2, 'A', 'Evaluate $\\displaystyle\\int_0^1 2x\\,e^{x^2}\\,dx$.', 'e-1'),
+    num(1, 2, 'B', 'Let $f(x) = x\\ln x$. Find $f\'(e)$.', '2'),
+    sym(1, 2, 'Let $f(x) = x^2 e^{-x}$. Find $f\'(x)$.', "f'(x)", ['x'], '2x*e^(-x)-x^2*e^(-x)'),
+    num(1, 3, 'A', 'Find the coefficient of $x^3$ in the Maclaurin series of $\\sin(2x)$.', '-4/3'),
+    num(1, 3, 'B', 'Evaluate $\\displaystyle\\int_0^{\\pi} x\\sin x\\,dx$.', 'pi'),
+    sym(1, 3, 'For $|x| < 2$, find the sum of the series $\\displaystyle\\sum_{n=0}^{\\infty} \\left(\\frac{x}{2}\\right)^n$.', 'S', ['x'], '2/(2-x)', { ranges: { x: [-1.5, 1.5] } }),
+    num(1, 4, 'A', 'Find the radius of convergence of $\\displaystyle\\sum_{n=1}^{\\infty} \\frac{n\\,x^n}{3^n}$.', '3'),
+    num(1, 4, 'B', 'Evaluate $\\displaystyle\\int_0^{\\infty} x\\,e^{-2x}\\,dx$.', '1/4'),
+    sym(1, 4, 'Write $f(x) = \\dfrac{1}{1-3x}$ as $\\sum a_n x^n$. Find $a_n$ in terms of $n$.', 'a_n', ['n'], '3^n'),
 
     // ==== 2 Second-Order Linear ODEs
-    mc(2, 1, 'A', 'The characteristic equation of y″ + 5y′ + 6y = 0 is:', 'r² + 5r + 6 = 0', ['r² + 6r + 5 = 0', '5r + 6 = 0', 'r² = 5r + 6']),
-    mc(2, 1, 'B', 'The characteristic roots are a ± bi (b ≠ 0). The general solution is:', 'e^(ax)(C₁ cos bx + C₂ sin bx)', ['C₁e^(ax) + C₂e^(bx)', '(C₁ + C₂x)e^(ax)', 'C₁ cos ax + C₂ sin bx']),
-    num(2, 2, 'A', 'Find the larger root of the characteristic equation of y″ + 5y′ + 6y = 0.', '-2'),
-    num(2, 2, 'B', 'y = e^(rx) with r > 0 solves y″ − 9y = 0. Find r.', '3'),
-    sym(2, 2, 'Solve y″ + ω²y = 0 with y(0) = A and y′(0) = 0. Give y(t).', 'y(t)', ['A', 'omega', 't'], 'A*cos(omega*t)'),
-    num(2, 3, 'A', 'Solve y″ + 4y = 0 with y(0) = 1, y′(0) = 2. Find y(π/8).', 'sqrt(2)'),
-    num(2, 3, 'B', 'Solve y″ − 3y′ + 2y = 0 with y(0) = 0, y′(0) = 1. Find y(ln 2).', '2'),
-    sym(2, 3, 'Solve y″ − 2y′ + y = 0 with y(0) = 1, y′(0) = 0.', 'y(x)', ['x'], '(1-x)*e^x'),
-    num(2, 4, 'A', 'y″ + y = 3e^(2x) has a particular solution y_p = A·e^(2x). Find A.', '3/5'),
-    num(2, 4, 'B', 'y″ + y = 2 cos x has a particular solution y_p = B·x sin x. Find B.', '1'),
-    sym(2, 4, 'Find the Wronskian W(e^(ax), e^(bx)).', 'W', ['a', 'b', 'x'], '(b-a)*e^((a+b)*x)'),
+    mc(2, 1, 'A', 'The characteristic equation of $y\'\' + 5y\' + 6y = 0$ is:', '$r^2 + 5r + 6 = 0$', ['$r^2 + 6r + 5 = 0$', '$5r + 6 = 0$', '$r^2 = 5r + 6$']),
+    mc(2, 1, 'B', 'The characteristic roots are $a \\pm bi$ with $b \\ne 0$. The general solution is:', '$e^{ax}\\left(C_1\\cos bx + C_2\\sin bx\\right)$', ['$C_1e^{ax} + C_2e^{bx}$', '$(C_1 + C_2x)\\,e^{ax}$', '$C_1\\cos ax + C_2\\sin bx$']),
+    num(2, 2, 'A', 'Find the larger root of the characteristic equation of $y\'\' + 5y\' + 6y = 0$.', '-2'),
+    num(2, 2, 'B', '$y = e^{rx}$ with $r > 0$ solves $y\'\' - 9y = 0$. Find $r$.', '3'),
+    sym(2, 2, 'Solve $y\'\' + \\omega^2 y = 0$ with $y(0) = A$ and $y\'(0) = 0$. Give $y(t)$.', 'y(t)', ['A', 'omega', 't'], 'A*cos(omega*t)'),
+    num(2, 3, 'A', 'Solve $y\'\' + 4y = 0$ with $y(0) = 1$, $y\'(0) = 2$. Find $y(\\pi/8)$.', 'sqrt(2)'),
+    num(2, 3, 'B', 'Solve $y\'\' - 3y\' + 2y = 0$ with $y(0) = 0$, $y\'(0) = 1$. Find $y(\\ln 2)$.', '2'),
+    sym(2, 3, 'Solve $y\'\' - 2y\' + y = 0$ with $y(0) = 1$, $y\'(0) = 0$.', 'y(x)', ['x'], '(1-x)*e^x'),
+    num(2, 4, 'A', '$y\'\' + y = 3e^{2x}$ has a particular solution $y_p = A\\,e^{2x}$. Find $A$.', '3/5'),
+    num(2, 4, 'B', '$y\'\' + y = 2\\cos x$ has a particular solution $y_p = B\\,x\\sin x$. Find $B$.', '1'),
+    sym(2, 4, 'Find the Wronskian $W\\!\\left(e^{ax},\\, e^{bx}\\right)$.', 'W', ['a', 'b', 'x'], '(b-a)*e^((a+b)*x)'),
 
-    // ==== 3 Damped Oscillators (m x″ + c x′ + k x = 0)
-    mc(3, 1, 'A', 'For m x″ + c x′ + k x = 0, critical damping happens when:', 'c² = 4mk', ['c = 0', 'c² > 4mk', 'c² < 4mk']),
+    // ==== 3 Damped Oscillators
+    mc(3, 1, 'A', 'For $m x\'\' + c x\' + k x = 0$, critical damping happens when:', '$c^2 = 4mk$', ['$c = 0$', '$c^2 > 4mk$', '$c^2 < 4mk$']),
     mc(3, 1, 'B', 'An underdamped oscillator:', 'Oscillates with a decaying amplitude', ['Returns to equilibrium without oscillating', 'Oscillates with a constant amplitude', 'Never returns toward equilibrium']),
-    num(3, 2, 'A', 'An undamped spring has m = 1 and k = 16. Find its angular frequency ω₀.', '4'),
-    num(3, 2, 'B', 'An oscillator has m = 2 and k = 8. Find the damping constant c that makes it critically damped.', '8'),
-    sym(3, 2, 'Find the natural angular frequency ω₀ of m x″ + k x = 0.', 'ω₀', ['k', 'm'], 'sqrt(k/m)'),
-    num(3, 3, 'A', 'Find the damped angular frequency of x″ + 2x′ + 5x = 0.', '2'),
-    num(3, 3, 'B', 'x″ + 6x′ + 5x = 0 is overdamped. Find the characteristic root closest to zero.', '-1'),
-    sym(3, 3, 'm x″ + c x′ + k x = 0 is underdamped. Find its damped angular frequency ω_d.', 'ω_d', ['k', 'm', 'c'], 'sqrt(k/m-c^2/(4m^2))', { ranges: { c: [0.1, 0.5], k: [2, 4], m: [0.5, 1.5] } }),
-    num(3, 4, 'A', 'Solve x″ + 2x′ + x = 0 with x(0) = 1, x′(0) = 0. Find x(1).', '2/e'),
-    num(3, 4, 'B', 'For x″ + 0.2x′ + 4x = 0, how long does it take the amplitude to halve?', '10ln(2)'),
-    sym(3, 4, 'Solve x″ + 2ω x′ + ω² x = 0 with x(0) = 0 and x′(0) = v.', 'x(t)', ['v', 'omega', 't'], 'v*t*e^(-omega*t)'),
+    num(3, 2, 'A', 'An undamped spring has $m = 1$ and $k = 16$. Find its angular frequency $\\omega_0$.', '4'),
+    num(3, 2, 'B', 'An oscillator has $m = 2$ and $k = 8$. Find the damping constant $c$ that makes it critically damped.', '8'),
+    sym(3, 2, 'Find the natural angular frequency $\\omega_0$ of $m x\'\' + k x = 0$.', '\\omega_0', ['k', 'm'], 'sqrt(k/m)'),
+    num(3, 3, 'A', 'Find the damped angular frequency of $x\'\' + 2x\' + 5x = 0$.', '2'),
+    num(3, 3, 'B', '$x\'\' + 6x\' + 5x = 0$ is overdamped. Find the characteristic root closest to zero.', '-1'),
+    sym(3, 3, '$m x\'\' + c x\' + k x = 0$ is underdamped. Find its damped angular frequency $\\omega_d$.', '\\omega_d', ['k', 'm', 'c'], 'sqrt(k/m-c^2/(4m^2))', { ranges: { c: [0.1, 0.5], k: [2, 4], m: [0.5, 1.5] } }),
+    num(3, 4, 'A', 'Solve $x\'\' + 2x\' + x = 0$ with $x(0) = 1$, $x\'(0) = 0$. Find $x(1)$.', '2/e'),
+    num(3, 4, 'B', 'For $x\'\' + 0.2x\' + 4x = 0$, how long does it take the amplitude to halve?', '10ln(2)'),
+    sym(3, 4, 'Solve $x\'\' + 2\\omega x\' + \\omega^2 x = 0$ with $x(0) = 0$ and $x\'(0) = v$.', 'x(t)', ['v', 'omega', 't'], 'v*t*e^(-omega*t)'),
 
     // ==== 4 Reduction of Order
-    mc(4, 1, 'A', 'Reduction of order is used to:', 'Find a second solution when one solution y₁ is known', ['Find a particular solution', 'Solve first-order equations only', 'Lower the degree of a polynomial']),
-    mc(4, 1, 'B', 'In reduction of order you substitute:', 'y = v(x)·y₁(x)', ['y = y₁(x) + v(x)', 'y = e^(v x)', 'y = v′(x)']),
-    num(4, 2, 'A', 'y″ − 2y′ + y = 0 has y₁ = eˣ. Substituting y = v eˣ gives v″ = 0. With v(0) = 0 and v′(0) = 1, find v(2).', '2'),
-    num(4, 2, 'B', 'For y″ + (2/x)y′ + q(x)y = 0, Abel\'s formula gives W = C·e^(−∫p dx). If W(1) = 1, find W(2).', '1/4'),
-    sym(4, 2, 'For x²y″ + xy′ − y = 0 (so p = 1/x), use Abel\'s formula with W(1) = 1. Find W(x).', 'W(x)', ['x'], '1/x'),
-    num(4, 3, 'A', 'x²y″ − 3xy′ + 4y = 0 has y₁ = x². Reduction of order gives y₂ = x² ln x. Find y₂(e).', 'e^2'),
-    num(4, 3, 'B', 'For x²y″ − 3xy′ + 4y = 0 with y₁ = x², reduction of order gives v′ = W/y₁² with W = x³. Find v′(2).', '1/2'),
-    sym(4, 3, 'For x²y″ − 3xy′ + 4y = 0 with y₁ = x², you find v′ = 1/x. Taking v(1) = 0, write y₂ = v·y₁.', 'y₂', ['x'], 'x^2*ln(x)'),
-    num(4, 4, 'A', '(1 − x²)y″ − 2xy′ + 2y = 0 has y₁ = x. Its second solution is y₂ = (x/2) ln((1 + x)/(1 − x)) − 1. Find y₂(1/2).', 'ln(3)/4-1'),
-    num(4, 4, 'B', 'y″ − (2/x²)y = 0 has y₁ = x². A second solution has the form y₂ = xᵐ with m ≠ 2. Find m.', '-1'),
-    sym(4, 4, 'y″ − 2ay′ + a²y = 0 has y₁ = e^(ax). With y = v·y₁, v(0) = 0 and v′(0) = 1, find y₂.', 'y₂', ['a', 'x'], 'x*e^(a*x)'),
+    mc(4, 1, 'A', 'Reduction of order is used to:', 'Find a second solution when one solution $y_1$ is known', ['Find a particular solution', 'Solve first-order equations only', 'Lower the degree of a polynomial']),
+    mc(4, 1, 'B', 'In reduction of order you substitute:', '$y = v(x)\\,y_1(x)$', ['$y = y_1(x) + v(x)$', '$y = e^{vx}$', '$y = v\'(x)$']),
+    num(4, 2, 'A', '$y\'\' - 2y\' + y = 0$ has $y_1 = e^x$. Substituting $y = v\\,e^x$ gives $v\'\' = 0$. With $v(0) = 0$ and $v\'(0) = 1$, find $v(2)$.', '2'),
+    num(4, 2, 'B', 'For $y\'\' + \\frac{2}{x}\\,y\' + q(x)\\,y = 0$, Abel\'s formula gives $W = C\\,e^{-\\int p\\,dx}$. If $W(1) = 1$, find $W(2)$.', '1/4'),
+    sym(4, 2, 'For $x^2y\'\' + xy\' - y = 0$ (so $p = 1/x$), use Abel\'s formula with $W(1) = 1$. Find $W(x)$.', 'W(x)', ['x'], '1/x'),
+    num(4, 3, 'A', '$x^2y\'\' - 3xy\' + 4y = 0$ has $y_1 = x^2$. Reduction of order gives $y_2 = x^2\\ln x$. Find $y_2(e)$.', 'e^2'),
+    num(4, 3, 'B', 'For $x^2y\'\' - 3xy\' + 4y = 0$ with $y_1 = x^2$, reduction of order gives $v\' = W/y_1^2$ with $W = x^3$. Find $v\'(2)$.', '1/2'),
+    sym(4, 3, 'For $x^2y\'\' - 3xy\' + 4y = 0$ with $y_1 = x^2$, you find $v\' = 1/x$. Taking $v(1) = 0$, write $y_2 = v\\,y_1$.', 'y_2', ['x'], 'x^2*ln(x)'),
+    num(4, 4, 'A', '$(1 - x^2)\\,y\'\' - 2xy\' + 2y = 0$ has $y_1 = x$. Its second solution is $y_2 = \\frac{x}{2}\\ln\\frac{1+x}{1-x} - 1$. Find $y_2(1/2)$.', 'ln(3)/4-1'),
+    num(4, 4, 'B', '$y\'\' - \\frac{2}{x^2}\\,y = 0$ has $y_1 = x^2$. A second solution has the form $y_2 = x^m$ with $m \\ne 2$. Find $m$.', '-1'),
+    sym(4, 4, '$y\'\' - 2ay\' + a^2y = 0$ has $y_1 = e^{ax}$. With $y = v\\,y_1$, $v(0) = 0$ and $v\'(0) = 1$, find $y_2$.', 'y_2', ['a', 'x'], 'x*e^(a*x)'),
 
     // ==== 5 Power Series Solutions
-    mc(5, 1, 'A', 'x = 0 is an ordinary point of y″ + xy = 0 because:', 'The coefficients are analytic at x = 0', ['The solution is zero there', 'The equation is first order', 'Every term vanishes at x = 0']),
-    mc(5, 1, 'B', 'Putting y = Σ aₙxⁿ into y′ = y gives the recurrence:', 'aₙ₊₁ = aₙ/(n + 1)', ['aₙ₊₁ = aₙ', 'aₙ₊₁ = (n + 1)aₙ', 'aₙ = 0']),
-    num(5, 2, 'A', 'Solve y′ = 2y with y = Σ aₙxⁿ and a₀ = 1. Find a₃.', '4/3'),
-    num(5, 2, 'B', 'Solve y″ + y = 0 with y = Σ aₙxⁿ, a₀ = 1 and a₁ = 0. Find a₂.', '-1/2'),
-    sym(5, 2, 'For y″ + y = 0 with y = Σ aₙxⁿ, find aₙ₊₂ in terms of aₙ and n. (Type aₙ as an.)', 'aₙ₊₂', ['an', 'n'], '-an/((n+2)(n+1))'),
-    num(5, 3, 'A', 'For Airy\'s equation y″ − xy = 0 with a₀ = 1 and a₁ = 0, find a₃.', '1/6'),
-    num(5, 3, 'B', 'y″ + xy′ + y = 0 gives aₙ₊₂ = −aₙ/(n + 2). With a₀ = 1, find a₄.', '1/8'),
-    sym(5, 3, 'The power series solution of y″ + y = 0 with y(0) = 0 and y′(0) = 1 sums to which function?', 'y(x)', ['x'], 'sin(x)'),
-    num(5, 4, 'A', 'What is the guaranteed radius of convergence of a power series solution about x = 0 of (1 + x²)y″ + y = 0?', '1'),
-    num(5, 4, 'B', 'Find the larger root of the indicial equation of x²y″ + xy′ + (x² − 1/4)y = 0 at x = 0.', '1/2'),
-    sym(5, 4, 'For the Euler equation x²y″ + a·xy′ + b·y = 0, the indicial equation is r² + (a − 1)r + b = 0. Find its larger root.', 'r', ['a', 'b'], '(1-a+sqrt((a-1)^2-4b))/2', { ranges: { a: [3, 5], b: [0.1, 0.5] } }),
+    mc(5, 1, 'A', '$x = 0$ is an ordinary point of $y\'\' + xy = 0$ because:', 'The coefficients are analytic at $x = 0$', ['The solution is zero there', 'The equation is first order', 'Every term vanishes at $x = 0$']),
+    mc(5, 1, 'B', 'Putting $y = \\sum a_n x^n$ into $y\' = y$ gives the recurrence:', '$a_{n+1} = \\dfrac{a_n}{n+1}$', ['$a_{n+1} = a_n$', '$a_{n+1} = (n+1)\\,a_n$', '$a_n = 0$']),
+    num(5, 2, 'A', 'Solve $y\' = 2y$ with $y = \\sum a_n x^n$ and $a_0 = 1$. Find $a_3$.', '4/3'),
+    num(5, 2, 'B', 'Solve $y\'\' + y = 0$ with $y = \\sum a_n x^n$, $a_0 = 1$ and $a_1 = 0$. Find $a_2$.', '-1/2'),
+    sym(5, 2, 'For $y\'\' + y = 0$ with $y = \\sum a_n x^n$, find $a_{n+2}$ in terms of $a_n$ and $n$. (Type $a_n$ as an.)', 'a_{n+2}', ['an', 'n'], '-an/((n+2)(n+1))'),
+    num(5, 3, 'A', 'For Airy\'s equation $y\'\' - xy = 0$ with $a_0 = 1$ and $a_1 = 0$, find $a_3$.', '1/6'),
+    num(5, 3, 'B', '$y\'\' + xy\' + y = 0$ gives $a_{n+2} = -\\dfrac{a_n}{n+2}$. With $a_0 = 1$, find $a_4$.', '1/8'),
+    sym(5, 3, 'The power series solution of $y\'\' + y = 0$ with $y(0) = 0$ and $y\'(0) = 1$ sums to which function?', 'y(x)', ['x'], 'sin(x)'),
+    num(5, 4, 'A', 'What is the guaranteed radius of convergence of a power series solution about $x = 0$ of $(1 + x^2)\\,y\'\' + y = 0$?', '1'),
+    num(5, 4, 'B', 'Find the larger root of the indicial equation of $x^2y\'\' + xy\' + \\left(x^2 - \\frac14\\right)y = 0$ at $x = 0$.', '1/2'),
+    sym(5, 4, 'For the Euler equation $x^2y\'\' + a\\,xy\' + b\\,y = 0$, the indicial equation is $r^2 + (a-1)\\,r + b = 0$. Find its larger root.', 'r', ['a', 'b'], '(1-a+sqrt((a-1)^2-4b))/2', { ranges: { a: [3, 5], b: [0.1, 0.5] } }),
 
     // ==== 6 Vector Algebra
-    mc(6, 1, 'A', 'The scalar triple product a · (b × c) gives:', 'The signed volume of the parallelepiped on a, b, c', ['The area of a triangle', 'A vector perpendicular to a', 'Zero for all vectors']),
-    mc(6, 1, 'B', 'Which is always true?', 'a × b = −(b × a)', ['a × b = b × a', 'a × b is a scalar', 'a × a = |a|²']),
-    num(6, 2, 'A', 'Find ⟨2, −1, 3⟩ · ⟨1, 4, 2⟩.', '4'),
-    vec(6, 2, 'B', 'Find ⟨1, 0, 2⟩ × ⟨0, 3, 1⟩.', ['-6', '-1', '3']),
-    sym(6, 2, 'Find the scalar projection of ⟨x, y, 0⟩ onto ⟨1, 1, 0⟩.', 'comp', ['x', 'y'], '(x+y)/sqrt(2)'),
-    num(6, 3, 'A', 'Find ⟨1, 2, 3⟩ · (⟨0, 1, 4⟩ × ⟨5, 6, 0⟩).', '1'),
-    vec(6, 3, 'B', 'Let a = ⟨1, 1, 0⟩, b = ⟨1, 0, 0⟩ and c = ⟨0, 1, 0⟩. Find a × (b × c).', ['1', '-1', '0']),
-    sym(6, 3, 'Vectors a and b have |a| = A, |b| = B and a · b = D. Find |a × b|.', '|a × b|', ['A', 'B', 'D'], 'sqrt(A^2*B^2-D^2)', { ranges: { A: [1, 2], B: [1, 2], D: [0.1, 0.5] } }),
-    num(6, 4, 'A', 'Find cos θ for the angle θ between a diagonal of a cube and one of its edges.', '1/sqrt(3)'),
-    num(6, 4, 'B', 'Find the distance from the point (1, 1, 1) to the line through the origin in the direction ⟨1, 0, 0⟩.', 'sqrt(2)'),
-    sym(6, 4, 'Find the area of the triangle with vertices (a, 0, 0), (0, b, 0) and (0, 0, c).', 'Area', ['a', 'b', 'c'], 'sqrt(a^2*b^2+b^2*c^2+c^2*a^2)/2'),
+    mc(6, 1, 'A', 'The scalar triple product $\\mathbf{a}\\cdot(\\mathbf{b}\\times\\mathbf{c})$ gives:', 'The signed volume of the parallelepiped on $\\mathbf{a}$, $\\mathbf{b}$, $\\mathbf{c}$', ['The area of a triangle', 'A vector perpendicular to $\\mathbf{a}$', 'Zero for all vectors']),
+    mc(6, 1, 'B', 'Which is always true?', '$\\mathbf{a}\\times\\mathbf{b} = -(\\mathbf{b}\\times\\mathbf{a})$', ['$\\mathbf{a}\\times\\mathbf{b} = \\mathbf{b}\\times\\mathbf{a}$', '$\\mathbf{a}\\times\\mathbf{b}$ is a scalar', '$\\mathbf{a}\\times\\mathbf{a} = |\\mathbf{a}|^2$']),
+    num(6, 2, 'A', 'Find $\\langle 2, -1, 3\\rangle \\cdot \\langle 1, 4, 2\\rangle$.', '4'),
+    vec(6, 2, 'B', 'Find $\\langle 1, 0, 2\\rangle \\times \\langle 0, 3, 1\\rangle$.', ['-6', '-1', '3']),
+    sym(6, 2, 'Find the scalar projection of $\\langle x, y, 0\\rangle$ onto $\\langle 1, 1, 0\\rangle$.', '\\operatorname{comp}', ['x', 'y'], '(x+y)/sqrt(2)'),
+    num(6, 3, 'A', 'Find $\\langle 1, 2, 3\\rangle \\cdot \\left(\\langle 0, 1, 4\\rangle \\times \\langle 5, 6, 0\\rangle\\right)$.', '1'),
+    vec(6, 3, 'B', 'Let $\\mathbf{a} = \\langle 1, 1, 0\\rangle$, $\\mathbf{b} = \\langle 1, 0, 0\\rangle$ and $\\mathbf{c} = \\langle 0, 1, 0\\rangle$. Find $\\mathbf{a}\\times(\\mathbf{b}\\times\\mathbf{c})$.', ['1', '-1', '0']),
+    sym(6, 3, 'Vectors $\\mathbf{a}$ and $\\mathbf{b}$ have $|\\mathbf{a}| = A$, $|\\mathbf{b}| = B$ and $\\mathbf{a}\\cdot\\mathbf{b} = D$. Find $|\\mathbf{a}\\times\\mathbf{b}|$.', '|\\mathbf{a}\\times\\mathbf{b}|', ['A', 'B', 'D'], 'sqrt(A^2*B^2-D^2)', { ranges: { A: [1, 2], B: [1, 2], D: [0.1, 0.5] } }),
+    num(6, 4, 'A', 'Find $\\cos\\theta$ for the angle $\\theta$ between a diagonal of a cube and one of its edges.', '1/sqrt(3)'),
+    num(6, 4, 'B', 'Find the distance from the point $(1, 1, 1)$ to the line through the origin in the direction $\\langle 1, 0, 0\\rangle$.', 'sqrt(2)'),
+    sym(6, 4, 'Find the area of the triangle with vertices $(a, 0, 0)$, $(0, b, 0)$ and $(0, 0, c)$.', '\\text{Area}', ['a', 'b', 'c'], 'sqrt(a^2*b^2+b^2*c^2+c^2*a^2)/2'),
 
     // ==== 7 Vector Calculus
-    mc(7, 1, 'A', 'For every smooth vector field F, ∇ · (∇ × F) equals:', '0', ['F', '∇F', '1']),
-    mc(7, 1, 'B', 'For every smooth scalar field f, ∇ × (∇f) equals:', 'The zero vector', ['∇²f', '∇f', 'It is undefined']),
-    num(7, 2, 'A', 'Find ∇ · ⟨x², xy, z⟩ at (1, 1, 1).', '4'),
-    vec(7, 2, 'B', 'Find ∇(x²yz) at (1, 2, 3).', ['12', '3', '2']),
-    sym(7, 2, 'Find ∇²(x²y + yz²).', '∇²f', ['x', 'y', 'z'], '4y'),
-    num(7, 3, 'A', 'Let r = ⟨x, y, z⟩. Find ∇ · r.', '3'),
-    vec(7, 3, 'B', 'Find ∇ × ⟨z, x, y⟩.', ['1', '1', '1']),
-    sym(7, 3, 'Let r = ⟨x, y, z⟩ and r = |r|. Find ∇ · (rⁿ r) in terms of n and r.', '∇ · (rⁿ r)', ['n', 'r'], '(n+3)*r^n'),
-    num(7, 4, 'A', 'Find the outward flux of ⟨x, y, z⟩ through the surface of the unit cube [0, 1]³.', '3'),
-    num(7, 4, 'B', 'Evaluate ∮ ⟨−y, x, 0⟩ · dr counterclockwise around the circle of radius 3 in the xy-plane.', '18pi'),
-    sym(7, 4, 'Find the outward flux of ⟨x, y, z⟩ through the sphere of radius R.', 'Φ', ['R'], '4pi*R^3'),
+    mc(7, 1, 'A', 'For every smooth vector field $\\mathbf{F}$, $\\nabla\\cdot(\\nabla\\times\\mathbf{F})$ equals:', '$0$', ['$\\mathbf{F}$', '$\\nabla\\mathbf{F}$', '$1$']),
+    mc(7, 1, 'B', 'For every smooth scalar field $f$, $\\nabla\\times(\\nabla f)$ equals:', 'The zero vector', ['$\\nabla^2 f$', '$\\nabla f$', 'It is undefined']),
+    num(7, 2, 'A', 'Find $\\nabla\\cdot\\langle x^2, xy, z\\rangle$ at $(1, 1, 1)$.', '4'),
+    vec(7, 2, 'B', 'Find $\\nabla\\!\\left(x^2yz\\right)$ at $(1, 2, 3)$.', ['12', '3', '2']),
+    sym(7, 2, 'Find $\\nabla^2\\!\\left(x^2y + yz^2\\right)$.', '\\nabla^2 f', ['x', 'y', 'z'], '4y'),
+    num(7, 3, 'A', 'Let $\\mathbf{r} = \\langle x, y, z\\rangle$. Find $\\nabla\\cdot\\mathbf{r}$.', '3'),
+    vec(7, 3, 'B', 'Find $\\nabla\\times\\langle z, x, y\\rangle$.', ['1', '1', '1']),
+    sym(7, 3, 'Let $\\mathbf{r} = \\langle x, y, z\\rangle$ and $r = |\\mathbf{r}|$. Find $\\nabla\\cdot\\left(r^n\\,\\mathbf{r}\\right)$ in terms of $n$ and $r$.', '\\nabla\\cdot(r^n\\mathbf{r})', ['n', 'r'], '(n+3)*r^n'),
+    num(7, 4, 'A', 'Find the outward flux of $\\langle x, y, z\\rangle$ through the surface of the unit cube $[0, 1]^3$.', '3'),
+    num(7, 4, 'B', 'Evaluate $\\displaystyle\\oint \\langle -y, x, 0\\rangle\\cdot d\\mathbf{r}$ counterclockwise around the circle of radius $3$ in the $xy$-plane.', '18pi'),
+    sym(7, 4, 'Find the outward flux of $\\langle x, y, z\\rangle$ through the sphere of radius $R$.', '\\Phi', ['R'], '4pi*R^3'),
 
     // ==== 8 Vector Spaces
-    mc(8, 1, 'A', 'Which of these is a vector space under the usual operations?', 'All polynomials of degree at most 2', ['All polynomials of degree exactly 2', 'All vectors in ℝ² with x ≥ 0', 'All vectors in ℝ³ with z = 1']),
-    mc(8, 1, 'B', 'Vectors v₁, …, vₖ are linearly independent when:', 'The only combination equal to zero has every coefficient zero', ['They are all orthogonal', 'They all have length 1', 'There are at most three of them']),
-    num(8, 2, 'A', 'What is the dimension of the space of polynomials of degree at most 3?', '4'),
-    num(8, 2, 'B', 'With ⟨f, g⟩ = ∫₀¹ f g dx, find ⟨x, x²⟩.', '1/4'),
-    sym(8, 2, 'With ⟨f, g⟩ = ∫₀^a f g dx, find the norm of f(x) = x.', '‖x‖', ['a'], 'sqrt(a^3/3)'),
-    num(8, 3, 'A', 'For which k are ⟨1, 2, 3⟩, ⟨0, 1, k⟩ and ⟨1, 3, 5⟩ linearly dependent?', '2'),
-    num(8, 3, 'B', 'What is the dimension of the null space of the matrix [[1, 2], [2, 4]]?', '1'),
-    sym(8, 3, 'The projection of v = ⟨a, b⟩ onto u = ⟨1, 1⟩ is c·u. Find c.', 'c', ['a', 'b'], '(a+b)/2'),
-    num(8, 4, 'A', 'Apply Gram–Schmidt to {1, x, x²} on [−1, 1] with ⟨f, g⟩ = ∫ f g dx. The third vector is x² + d. Find d.', '-1/3'),
-    vec(8, 4, 'B', 'Write ⟨3, 1⟩ in the basis {⟨1, 1⟩, ⟨1, −1⟩}. Give the coordinates (c₁, c₂).', ['2', '1']),
-    sym(8, 4, 'Find c > 0 so that c·x has norm 1 on [−L, L], with ⟨f, g⟩ = ∫ f g dx.', 'c', ['L'], 'sqrt(3/(2L^3))'),
+    mc(8, 1, 'A', 'Which of these is a vector space under the usual operations?', 'All polynomials of degree at most $2$', ['All polynomials of degree exactly $2$', 'All vectors in $\\mathbb{R}^2$ with $x \\ge 0$', 'All vectors in $\\mathbb{R}^3$ with $z = 1$']),
+    mc(8, 1, 'B', 'Vectors $\\mathbf{v}_1, \\ldots, \\mathbf{v}_k$ are linearly independent when:', 'The only combination equal to $\\mathbf{0}$ has every coefficient zero', ['They are all orthogonal', 'They all have length $1$', 'There are at most three of them']),
+    num(8, 2, 'A', 'What is the dimension of the space of polynomials of degree at most $3$?', '4'),
+    num(8, 2, 'B', 'With $\\langle f, g\\rangle = \\int_0^1 f\\,g\\,dx$, find $\\langle x, x^2\\rangle$.', '1/4'),
+    sym(8, 2, 'With $\\langle f, g\\rangle = \\int_0^a f\\,g\\,dx$, find the norm of $f(x) = x$.', '\\|x\\|', ['a'], 'sqrt(a^3/3)'),
+    num(8, 3, 'A', 'For which $k$ are $\\langle 1, 2, 3\\rangle$, $\\langle 0, 1, k\\rangle$ and $\\langle 1, 3, 5\\rangle$ linearly dependent?', '2'),
+    num(8, 3, 'B', 'What is the dimension of the null space of $\\begin{pmatrix} 1 & 2 \\\\ 2 & 4 \\end{pmatrix}$?', '1'),
+    sym(8, 3, 'The projection of $\\mathbf{v} = \\langle a, b\\rangle$ onto $\\mathbf{u} = \\langle 1, 1\\rangle$ is $c\\,\\mathbf{u}$. Find $c$.', 'c', ['a', 'b'], '(a+b)/2'),
+    num(8, 4, 'A', 'Apply Gram–Schmidt to $\\{1, x, x^2\\}$ on $[-1, 1]$ with $\\langle f, g\\rangle = \\int_{-1}^{1} f\\,g\\,dx$. The third vector is $x^2 + d$. Find $d$.', '-1/3'),
+    vec(8, 4, 'B', 'Write $\\langle 3, 1\\rangle$ in the basis $\\{\\langle 1, 1\\rangle, \\langle 1, -1\\rangle\\}$. Give the coordinates $(c_1, c_2)$.', ['2', '1']),
+    sym(8, 4, 'Find $c > 0$ so that $c\\,x$ has norm $1$ on $[-L, L]$, with $\\langle f, g\\rangle = \\int_{-L}^{L} f\\,g\\,dx$.', 'c', ['L'], 'sqrt(3/(2L^3))'),
 
     // ==== 9 Linear Operators
-    mc(9, 1, 'A', 'An operator L is linear when:', 'L(au + bv) = aL(u) + bL(v)', ['L(u) = u for every u', 'L(uv) = L(u)L(v)', 'L(0) = 1']),
-    mc(9, 1, 'B', 'The eigenvalues of a Hermitian (self-adjoint) operator are always:', 'Real', ['Purely imaginary', 'Zero', 'Of absolute value 1']),
-    num(9, 2, 'A', 'Find the larger eigenvalue of [[2, 0], [0, 5]].', '5'),
-    num(9, 2, 'B', 'D = d/dx acting on e^(3x) gives λe^(3x). Find λ.', '3'),
-    sym(9, 2, 'Let f = e^(kx). Compute (d/dx)(x f) − x (d/dx)f.', '[D, x]f', ['k', 'x'], 'e^(k*x)'),
-    num(9, 3, 'A', 'Find the larger eigenvalue of [[2, 1], [1, 2]].', '3'),
-    vec(9, 3, 'B', 'Find an eigenvector of [[2, 1], [1, 2]] for the eigenvalue 3, scaled so its first component is 1.', ['1', '1']),
-    sym(9, 3, 'For b > 0, find the larger eigenvalue of [[a, b], [b, a]].', 'λ', ['a', 'b'], 'a+b'),
-    num(9, 4, 'A', 'Let A = [[0, 1], [0, 0]] and B = [[0, 0], [1, 0]]. Find the top-left entry of the commutator AB − BA.', '1'),
-    num(9, 4, 'B', 'Find the larger eigenvalue of the Hermitian matrix [[1, i], [−i, 1]].', '2'),
-    sym(9, 4, 'Find the eigenvalues λₙ of d²/dx² on [0, L] with f(0) = f(L) = 0.', 'λₙ', ['n', 'L'], '-(n*pi/L)^2')
+    mc(9, 1, 'A', 'An operator $L$ is linear when:', '$L(a\\mathbf{u} + b\\mathbf{v}) = a\\,L(\\mathbf{u}) + b\\,L(\\mathbf{v})$', ['$L(\\mathbf{u}) = \\mathbf{u}$ for every $\\mathbf{u}$', '$L(\\mathbf{u}\\mathbf{v}) = L(\\mathbf{u})\\,L(\\mathbf{v})$', '$L(\\mathbf{0}) = 1$']),
+    mc(9, 1, 'B', 'The eigenvalues of a Hermitian (self-adjoint) operator are always:', 'Real', ['Purely imaginary', 'Zero', 'Of absolute value $1$']),
+    num(9, 2, 'A', 'Find the larger eigenvalue of $\\begin{pmatrix} 2 & 0 \\\\ 0 & 5 \\end{pmatrix}$.', '5'),
+    num(9, 2, 'B', '$D = \\dfrac{d}{dx}$ acting on $e^{3x}$ gives $\\lambda\\,e^{3x}$. Find $\\lambda$.', '3'),
+    sym(9, 2, 'Let $f = e^{kx}$. Compute $\\dfrac{d}{dx}(x f) - x\\,\\dfrac{df}{dx}$.', '[D, x]\\,f', ['k', 'x'], 'e^(k*x)'),
+    num(9, 3, 'A', 'Find the larger eigenvalue of $\\begin{pmatrix} 2 & 1 \\\\ 1 & 2 \\end{pmatrix}$.', '3'),
+    vec(9, 3, 'B', 'Find an eigenvector of $\\begin{pmatrix} 2 & 1 \\\\ 1 & 2 \\end{pmatrix}$ for the eigenvalue $3$, scaled so its first component is $1$.', ['1', '1']),
+    sym(9, 3, 'For $b > 0$, find the larger eigenvalue of $\\begin{pmatrix} a & b \\\\ b & a \\end{pmatrix}$.', '\\lambda', ['a', 'b'], 'a+b'),
+    num(9, 4, 'A', 'Let $A = \\begin{pmatrix} 0 & 1 \\\\ 0 & 0 \\end{pmatrix}$ and $B = \\begin{pmatrix} 0 & 0 \\\\ 1 & 0 \\end{pmatrix}$. Find the top-left entry of $AB - BA$.', '1'),
+    num(9, 4, 'B', 'Find the larger eigenvalue of the Hermitian matrix $\\begin{pmatrix} 1 & i \\\\ -i & 1 \\end{pmatrix}$.', '2'),
+    sym(9, 4, 'Find the eigenvalues $\\lambda_n$ of $\\dfrac{d^2}{dx^2}$ on $[0, L]$ with $f(0) = f(L) = 0$.', '\\lambda_n', ['n', 'L'], '-(n*pi/L)^2')
   ];
 
   // ---------------------------------------------------------- expression reader (numbers, exact values and formulas)
@@ -732,6 +734,33 @@ if (typeof module === 'object' && module.exports) { module.exports = Calc3Diag; 
   // ------------------------------------------------------------ answer boxes
   function mathHtml(raw, vars) { var r = P.parseExpr(raw, vars); return r.error ? null : P.renderAst(r.ast); }
   // Typeset an expression with MathJax (SVG) when it has loaded; otherwise use the plain HTML rendering.
+  // Question text: plain words with $...$ LaTeX pieces typeset by MathJax (retries until MathJax has loaded).
+  function mjStyle() {
+    var mj = window.MathJax;
+    if (!mathNode.styled && mj && typeof mj.svgStylesheet === 'function') { document.head.appendChild(mj.svgStylesheet()); mathNode.styled = true; }
+  }
+  function texSpan(tex) {
+    var span = el('span', { class: 'mj-inline' });
+    function draw() {
+      var mj = window.MathJax;
+      if (!(mj && typeof mj.tex2svg === 'function')) { return false; }
+      try { mjStyle(); clear(span); span.appendChild(mj.tex2svg(tex, { display: false })); } catch (e) { span.textContent = tex; }
+      return true;
+    }
+    if (!draw()) {
+      span.textContent = tex;
+      var tries = 0, timer = setInterval(function () { if (draw() || ++tries > 60) { clearInterval(timer); } }, 200);
+    }
+    return span;
+  }
+  function rich(text) {
+    var out = el('span');
+    String(text).split(/(\$[^$]+\$)/).forEach(function (part) {
+      if (part.length > 2 && part.charAt(0) === '$' && part.charAt(part.length - 1) === '$') { out.appendChild(texSpan(part.slice(1, -1))); }
+      else if (part) { out.appendChild(document.createTextNode(part)); }
+    });
+    return out;
+  }
   function mathNode(ast, units) {
     var mj = window.MathJax;
     if (mj && typeof mj.tex2svg === 'function') {
@@ -809,7 +838,7 @@ if (typeof module === 'object' && module.exports) { module.exports = Calc3Diag; 
       kids.push(el('span', { class: 'sep', text: '⟩' }));
       row = el('div', { class: 'answer-row vec' }, kids);
     } else {
-      row = el('div', { class: 'answer-row' }, item.lhs ? el('span', { class: 'lead-in', text: item.lhs + ' =' }) : null, inputs[0]);
+      row = el('div', { class: 'answer-row' }, item.lhs ? el('span', { class: 'lead-in' }, texSpan(item.lhs + ' =')) : null, inputs[0]);
     }
     refresh();
     return {
@@ -825,7 +854,7 @@ if (typeof module === 'object' && module.exports) { module.exports = Calc3Diag; 
   function showStart() {
     clear(app);
     var demoNum = answerBox({ type: 'num' }, function () {}, function () {});
-    var demoSym = answerBox({ type: 'sym', vars: ['x', 'y'], lhs: '∂f/∂x' }, function () {}, function () {});
+    var demoSym = answerBox({ type: 'sym', vars: ['x', 'y'], lhs: '\\partial f/\\partial x' }, function () {}, function () {});
     var nameIn = el('input', { type: 'text', id: 'name', autocomplete: 'off' });
     var err = el('div', { class: 'msg err' });
     app.appendChild(el('div', { class: 'card' },
@@ -875,7 +904,7 @@ if (typeof module === 'object' && module.exports) { module.exports = Calc3Diag; 
       body = el('div', { class: 'opts', role: 'group', 'aria-label': 'Answer choices' }, order.map(function (idx, k) {
         var b = el('button', { type: 'button', class: 'opt', 'aria-pressed': 'false', onclick: function () {
           cur.choice = idx; btns.forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); }); say('');
-        } }, el('span', { class: 'key', text: 'ABCD'[k] }), el('span', { text: item.opts[idx] }));
+        } }, el('span', { class: 'key', text: 'ABCD'[k] }), el('span', null, rich(item.opts[idx])));
         btns.push(b); return b;
       }));
     } else {
@@ -895,7 +924,7 @@ if (typeof module === 'object' && module.exports) { module.exports = Calc3Diag; 
     }
     app.appendChild(el('div', { class: 'card' },
       el('div', { class: 'qhead' }, el('span', { class: 'where', text: 'Question ' + number + ' · ' + item.ch + '. ' + chTitle[item.ch] }), timerEl),
-      el('div', { class: 'prompt' }, el('p', { text: item.q })),
+      el('div', { class: 'prompt' }, el('p', null, rich(item.q))),
       body, msg,
       el('div', { class: 'row spread' },
         el('button', { class: 'primary', text: 'Submit', onclick: submit }),
@@ -1012,7 +1041,7 @@ if (typeof module === 'object' && module.exports) { module.exports = Calc3Diag; 
   }
   function keyNode(item) {
     function m(src, vars) { return mathNode(P.parseExpr(src, vars).ast); }
-    if (item.type === 'mc') { return el('span', { text: item.opts[0] }); }
+    if (item.type === 'mc') { return rich(item.opts[0]); }
     if (item.type === 'num') { return m(item.ans, []); }
     if (item.type === 'vec') {
       var s = el('span', { class: 'vecprev' }, '⟨');
@@ -1056,7 +1085,7 @@ if (typeof module === 'object' && module.exports) { module.exports = Calc3Diag; 
       var res = RES[r[1]] || RES.s;
       return el('tr', null, el('td', { class: 'num', text: String(i + 1) }),
         el('td', { class: 'small', text: item.id + (item.type === 'sym' ? ' (formula)' : '') }),
-        el('td', { text: item.q }), el('td', { class: 'mono', text: r[3] || '—' }), el('td', null, keyNode(item)),
+        el('td', null, rich(item.q)), el('td', item.type === 'mc' ? null : { class: 'mono' }, item.type === 'mc' ? rich(r[3] || '—') : (r[3] || '—')), el('td', null, keyNode(item)),
         el('td', null, chip(res[0], res[1]), r[4] && P.TAGS[r[4]] ? el('div', { style: 'margin-top:4px' }, chip('tag', P.TAGS[r[4]].name)) : null),
         el('td', { class: 'small num', text: r[2] + 's' }));
     });
