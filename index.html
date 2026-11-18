@@ -1,0 +1,1087 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mathematical Methods Diagnostic</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one centred notebook column on faint graph paper; one card per screen. */
+:root {
+  --bg: #f1f0f6; --grid: #e3e1ec; --card: #ffffff; --ink: #1b1a2a; --muted: #5d5b72; --line: #d8d5e4;
+  --accent: #4b3aa6; --accent-ink: #ffffff; --accent-soft: #e8e4f7; --field: #ffffff;
+  --good: #11672c; --good-bg: #e1f1e5; --warn: #8f4a00; --warn-bg: #fbeedb; --bad: #b4231f; --bad-bg: #fae3e2;
+  --grey-bg: #ecebf2;
+  --f-display: "Archivo", "Segoe UI", system-ui, sans-serif;
+  --f-body: "Source Sans 3", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, Consolas, Menlo, monospace;
+  --f-math: "Cambria Math", "STIX Two Math", "Times New Roman", serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14131c; --grid: #1c1b27; --card: #1d1c29; --ink: #ebe9f3; --muted: #a6a3ba; --line: #34324a;
+    --accent: #a597f0; --accent-ink: #15131f; --accent-soft: #2b2645; --field: #14131c;
+    --good: #82d39a; --good-bg: #183324; --warn: #f0b46e; --warn-bg: #3a2b17; --bad: #ff9590; --bad-bg: #3d1f1f;
+    --grey-bg: #262436; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #14131c; --grid: #1c1b27; --card: #1d1c29; --ink: #ebe9f3; --muted: #a6a3ba; --line: #34324a;
+  --accent: #a597f0; --accent-ink: #15131f; --accent-soft: #2b2645; --field: #14131c;
+  --good: #82d39a; --good-bg: #183324; --warn: #f0b46e; --warn-bg: #3a2b17; --bad: #ff9590; --bad-bg: #3d1f1f;
+  --grey-bg: #262436; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { font-size: 17px; }
+body {
+  margin: 0; color: var(--ink); font-family: var(--f-body); line-height: 1.55;
+  background-color: var(--bg);
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+#app { max-width: 800px; margin: 0 auto; padding-block: 28px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 26px clamp(18px, 4vw, 32px); margin-bottom: 18px; min-width: 0; }
+h1, h2 { font-family: var(--f-display); text-wrap: balance; letter-spacing: -.01em; }
+h1 { font-size: 1.75rem; font-weight: 800; margin: 0 0 6px; }
+h2 { font-size: 1.12rem; font-weight: 700; margin: 26px 0 8px; }
+.eyebrow { font-family: var(--f-mono); font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin: 0 0 6px; }
+.sub { color: var(--muted); margin: 0 0 14px; }
+ul.rules { padding-left: 1.2em; margin: 8px 0; display: grid; gap: 6px; }
+label { display: block; font-weight: 600; margin: 14px 0 4px; }
+input[type=text] { width: 100%; padding: 10px 12px; font: inherit; border: 1px solid var(--line); border-radius: 8px; background: var(--field); color: var(--ink); }
+input:focus, button:focus-visible, a:focus-visible, textarea:focus { outline: 3px solid var(--accent); outline-offset: 1px; }
+.answer-row { display: flex; align-items: stretch; border: 1px solid var(--line); border-radius: 8px; background: var(--field); overflow: hidden; }
+.answer-row:focus-within { outline: 3px solid var(--accent); outline-offset: 1px; }
+.answer-row input { border: none; border-radius: 0; font-family: var(--f-mono); font-size: 1.15rem; padding: 12px 14px; min-width: 0; flex: 1; }
+.answer-row input:focus { outline: none; background: var(--accent-soft); }
+.answer-row.vec input { text-align: center; padding: 12px 6px; }
+.sep { display: flex; align-items: center; padding: 0 6px; font-family: var(--f-math); font-size: 1.4rem; color: var(--muted); }
+.lead-in { display: flex; align-items: center; padding: 0 14px; font-family: var(--f-math); font-size: 1.15rem; background: var(--grey-bg); border-right: 1px solid var(--line); white-space: nowrap; }
+button, a.btn { font: inherit; cursor: pointer; border-radius: 8px; padding: 10px 18px; border: 1px solid var(--line); background: var(--card); color: var(--ink); text-decoration: none; display: inline-block; }
+button.primary, a.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 700; }
+button.quiet { color: var(--muted); }
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.spread { justify-content: space-between; }
+.qhead { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; color: var(--muted); font-size: .92rem; margin-bottom: 12px; flex-wrap: wrap; }
+.qhead .where { font-family: var(--f-mono); font-size: .8rem; letter-spacing: .05em; text-transform: uppercase; }
+.timer { font-family: var(--f-mono); font-variant-numeric: tabular-nums; font-weight: 600; }
+.timer.low { color: var(--warn); }
+.prompt { font-size: 1.2rem; margin: 4px 0 18px; }
+.prompt p { margin: 0 0 .6em; }
+.hint { color: var(--muted); font-size: .92rem; margin: 8px 0; }
+.opts { display: grid; gap: 8px; margin: 6px 0 12px; }
+.opt { display: flex; gap: 12px; align-items: flex-start; text-align: left; padding: 12px 14px; width: 100%; }
+.opt .key { font-family: var(--f-mono); font-weight: 600; color: var(--accent); min-width: 1.2em; }
+.opt[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.preview { min-height: 2.6em; margin: 10px 0 6px; padding: 8px 12px; border-radius: 8px; background: var(--grey-bg); display: flex; align-items: center; flex-wrap: wrap; gap: 4px 8px; }
+.preview .lead { color: var(--muted); font-size: .9rem; }
+.keys { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 2px; }
+.keys button { padding: 5px 12px; min-width: 2.6em; font-family: var(--f-math); font-size: 1.05rem; }
+.keys button.op { font-family: var(--f-mono); font-size: .9rem; color: var(--muted); }
+.math { font-family: var(--f-math); font-size: 1.2rem; line-height: 1.2; }
+.math i { font-style: italic; }
+.frac { display: inline-flex; flex-direction: column; vertical-align: middle; text-align: center; margin: 0 2px; }
+.frac > span { padding: 0 3px; }
+.frac > span:first-child { border-bottom: 1.5px solid currentColor; }
+.rad { white-space: nowrap; }
+.rad > span { display: inline-block; border-top: 1.5px solid currentColor; padding: .12em 2px 0; margin-left: 1px; line-height: 1.25; }
+.math sup { line-height: 0; }
+.mj { display: inline-flex; align-items: center; font-size: 1.2rem; }
+.mj mjx-container { margin: 0 !important; }
+.vecprev { display: inline-flex; align-items: center; gap: 2px; font-family: var(--f-math); font-size: 1.2rem; }
+.math sup { font-size: .7em; }
+.msg { min-height: 1.4em; margin: 6px 0 10px; }
+.msg.err { color: var(--bad); }
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+th, td { text-align: left; padding: 8px 9px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-family: var(--f-mono); font-size: .74rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; }
+td.num, .mono { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+.chip { display: inline-block; padding: 1px 9px; border-radius: 999px; font-size: .84rem; font-weight: 700; white-space: nowrap; }
+.chip.l4, .chip.l3, .chip.right { background: var(--good-bg); color: var(--good); }
+.chip.l2, .chip.tag { background: var(--accent-soft); color: var(--accent); }
+.chip.l1, .chip.skipped { background: var(--warn-bg); color: var(--warn); }
+.chip.l0, .chip.wrong { background: var(--bad-bg); color: var(--bad); }
+.chip.nt { background: var(--grey-bg); color: var(--muted); }
+.ladder { font-family: var(--f-mono); white-space: nowrap; letter-spacing: .1em; }
+.band { display: grid; gap: 4px; padding: 16px 18px; border-radius: 10px; background: var(--accent-soft); margin: 12px 0; }
+.band .name { font-family: var(--f-display); font-weight: 800; font-size: 1.5rem; color: var(--accent); }
+.meter { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-top: 6px; }
+.meter span { height: 8px; border-radius: 4px; background: var(--line); }
+.meter span.on { background: var(--accent); }
+.meter-labels { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; font-size: .74rem; color: var(--muted); }
+.small { font-size: .88rem; color: var(--muted); }
+.findings { display: grid; gap: 10px; padding: 0; margin: 8px 0; list-style: none; }
+.findings li { padding: 10px 14px; border-left: 4px solid var(--accent); background: var(--grey-bg); border-radius: 0 8px 8px 0; }
+.findings li b { display: block; }
+textarea.copybox { width: 100%; height: 8em; font-family: var(--f-mono); font-size: .8rem; background: var(--field); color: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 8px; }
+@media (prefers-reduced-motion: no-preference) { .card { animation: rise .18s ease-out; } @keyframes rise { from { transform: translateY(4px); } to { transform: none; } } }
+</style>
+</head>
+<body>
+
+<script>window.MathJax = { startup: { typeset: false }, svg: { fontCache: 'local' } };</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+
+<div id="app"></div>
+
+<script id="diag-core">
+/* Mathematical methods diagnostic (ODEs, series, vectors, vector spaces, operators): bank, graders, engine. */
+var Calc3Diag = (function () {
+  'use strict';
+
+  var CHAPTERS = [
+    [1, 'Calculus and Series Readiness'], [2, 'Second-Order Linear ODEs'], [3, 'Damped Oscillators'], [4, 'Reduction of Order'],
+    [5, 'Power Series Solutions'], [6, 'Vector Algebra'], [7, 'Vector Calculus'], [8, 'Vector Spaces'], [9, 'Linear Operators']
+  ];
+  var SETTINGS = { title: 'Mathematical Methods Diagnostic', exam: 'MATHMETH-DIAG', seconds_per_item: 240, max_items: 50, tolerance: 5e-4,
+                   sym_every: 3, email_to: 'textbookbreakdown@gmail.com', subject_tag: '[MATHMETH-DIAG]' };
+
+  function mc(ch, rung, v, q, right, wrong) { return { ch: ch, rung: rung, v: v, type: 'mc', q: q, opts: [right].concat(wrong) }; }
+  function num(ch, rung, v, q, ans) { return { ch: ch, rung: rung, v: v, type: 'num', q: q, ans: ans }; }
+  function vec(ch, rung, v, q, ans) { return { ch: ch, rung: rung, v: v, type: 'vec', q: q, ans: ans }; }
+  function sym(ch, rung, q, lhs, vars, key, o) { o = o || {}; return { ch: ch, rung: rung, v: 'S', type: 'sym', q: q, lhs: lhs, vars: vars, key: key, ranges: o.ranges || {}, upToConst: !!o.upToConst }; }
+
+  var ITEMS = [
+    // ==== 1 Calculus and Series Readiness
+    mc(1, 1, 'A', 'What is d/dx (e^(3x))?', '3e^(3x)', ['e^(3x)', '3e^(2x)', 'e^(3x)/3']),
+    mc(1, 1, 'B', 'The Maclaurin series of eˣ begins:', '1 + x + x²/2 + x³/6 + …', ['x + x²/2 + x³/3 + …', '1 − x + x²/2 − x³/6 + …', '1 + x + x² + x³ + …']),
+    num(1, 2, 'A', 'Evaluate ∫₀¹ 2x·e^(x²) dx.', 'e-1'),
+    num(1, 2, 'B', 'Let f(x) = x ln x. Find f′(e).', '2'),
+    sym(1, 2, 'Let f(x) = x²e^(−x). Find f′(x).', 'f′(x)', ['x'], '2x*e^(-x)-x^2*e^(-x)'),
+    num(1, 3, 'A', 'Find the coefficient of x³ in the Maclaurin series of sin(2x).', '-4/3'),
+    num(1, 3, 'B', 'Evaluate ∫₀^π x sin x dx.', 'pi'),
+    sym(1, 3, 'For |x| < 2, find the sum of the series Σₙ₌₀^∞ (x/2)ⁿ.', 'S', ['x'], '2/(2-x)', { ranges: { x: [-1.5, 1.5] } }),
+    num(1, 4, 'A', 'Find the radius of convergence of Σₙ₌₁^∞ n xⁿ / 3ⁿ.', '3'),
+    num(1, 4, 'B', 'Evaluate ∫₀^∞ x e^(−2x) dx.', '1/4'),
+    sym(1, 4, 'Write f(x) = 1/(1 − 3x) as Σ aₙ xⁿ. Find aₙ in terms of n.', 'aₙ', ['n'], '3^n'),
+
+    // ==== 2 Second-Order Linear ODEs
+    mc(2, 1, 'A', 'The characteristic equation of y″ + 5y′ + 6y = 0 is:', 'r² + 5r + 6 = 0', ['r² + 6r + 5 = 0', '5r + 6 = 0', 'r² = 5r + 6']),
+    mc(2, 1, 'B', 'The characteristic roots are a ± bi (b ≠ 0). The general solution is:', 'e^(ax)(C₁ cos bx + C₂ sin bx)', ['C₁e^(ax) + C₂e^(bx)', '(C₁ + C₂x)e^(ax)', 'C₁ cos ax + C₂ sin bx']),
+    num(2, 2, 'A', 'Find the larger root of the characteristic equation of y″ + 5y′ + 6y = 0.', '-2'),
+    num(2, 2, 'B', 'y = e^(rx) with r > 0 solves y″ − 9y = 0. Find r.', '3'),
+    sym(2, 2, 'Solve y″ + ω²y = 0 with y(0) = A and y′(0) = 0. Give y(t).', 'y(t)', ['A', 'omega', 't'], 'A*cos(omega*t)'),
+    num(2, 3, 'A', 'Solve y″ + 4y = 0 with y(0) = 1, y′(0) = 2. Find y(π/8).', 'sqrt(2)'),
+    num(2, 3, 'B', 'Solve y″ − 3y′ + 2y = 0 with y(0) = 0, y′(0) = 1. Find y(ln 2).', '2'),
+    sym(2, 3, 'Solve y″ − 2y′ + y = 0 with y(0) = 1, y′(0) = 0.', 'y(x)', ['x'], '(1-x)*e^x'),
+    num(2, 4, 'A', 'y″ + y = 3e^(2x) has a particular solution y_p = A·e^(2x). Find A.', '3/5'),
+    num(2, 4, 'B', 'y″ + y = 2 cos x has a particular solution y_p = B·x sin x. Find B.', '1'),
+    sym(2, 4, 'Find the Wronskian W(e^(ax), e^(bx)).', 'W', ['a', 'b', 'x'], '(b-a)*e^((a+b)*x)'),
+
+    // ==== 3 Damped Oscillators (m x″ + c x′ + k x = 0)
+    mc(3, 1, 'A', 'For m x″ + c x′ + k x = 0, critical damping happens when:', 'c² = 4mk', ['c = 0', 'c² > 4mk', 'c² < 4mk']),
+    mc(3, 1, 'B', 'An underdamped oscillator:', 'Oscillates with a decaying amplitude', ['Returns to equilibrium without oscillating', 'Oscillates with a constant amplitude', 'Never returns toward equilibrium']),
+    num(3, 2, 'A', 'An undamped spring has m = 1 and k = 16. Find its angular frequency ω₀.', '4'),
+    num(3, 2, 'B', 'An oscillator has m = 2 and k = 8. Find the damping constant c that makes it critically damped.', '8'),
+    sym(3, 2, 'Find the natural angular frequency ω₀ of m x″ + k x = 0.', 'ω₀', ['k', 'm'], 'sqrt(k/m)'),
+    num(3, 3, 'A', 'Find the damped angular frequency of x″ + 2x′ + 5x = 0.', '2'),
+    num(3, 3, 'B', 'x″ + 6x′ + 5x = 0 is overdamped. Find the characteristic root closest to zero.', '-1'),
+    sym(3, 3, 'm x″ + c x′ + k x = 0 is underdamped. Find its damped angular frequency ω_d.', 'ω_d', ['k', 'm', 'c'], 'sqrt(k/m-c^2/(4m^2))', { ranges: { c: [0.1, 0.5], k: [2, 4], m: [0.5, 1.5] } }),
+    num(3, 4, 'A', 'Solve x″ + 2x′ + x = 0 with x(0) = 1, x′(0) = 0. Find x(1).', '2/e'),
+    num(3, 4, 'B', 'For x″ + 0.2x′ + 4x = 0, how long does it take the amplitude to halve?', '10ln(2)'),
+    sym(3, 4, 'Solve x″ + 2ω x′ + ω² x = 0 with x(0) = 0 and x′(0) = v.', 'x(t)', ['v', 'omega', 't'], 'v*t*e^(-omega*t)'),
+
+    // ==== 4 Reduction of Order
+    mc(4, 1, 'A', 'Reduction of order is used to:', 'Find a second solution when one solution y₁ is known', ['Find a particular solution', 'Solve first-order equations only', 'Lower the degree of a polynomial']),
+    mc(4, 1, 'B', 'In reduction of order you substitute:', 'y = v(x)·y₁(x)', ['y = y₁(x) + v(x)', 'y = e^(v x)', 'y = v′(x)']),
+    num(4, 2, 'A', 'y″ − 2y′ + y = 0 has y₁ = eˣ. Substituting y = v eˣ gives v″ = 0. With v(0) = 0 and v′(0) = 1, find v(2).', '2'),
+    num(4, 2, 'B', 'For y″ + (2/x)y′ + q(x)y = 0, Abel\'s formula gives W = C·e^(−∫p dx). If W(1) = 1, find W(2).', '1/4'),
+    sym(4, 2, 'For x²y″ + xy′ − y = 0 (so p = 1/x), use Abel\'s formula with W(1) = 1. Find W(x).', 'W(x)', ['x'], '1/x'),
+    num(4, 3, 'A', 'x²y″ − 3xy′ + 4y = 0 has y₁ = x². Reduction of order gives y₂ = x² ln x. Find y₂(e).', 'e^2'),
+    num(4, 3, 'B', 'For x²y″ − 3xy′ + 4y = 0 with y₁ = x², reduction of order gives v′ = W/y₁² with W = x³. Find v′(2).', '1/2'),
+    sym(4, 3, 'For x²y″ − 3xy′ + 4y = 0 with y₁ = x², you find v′ = 1/x. Taking v(1) = 0, write y₂ = v·y₁.', 'y₂', ['x'], 'x^2*ln(x)'),
+    num(4, 4, 'A', '(1 − x²)y″ − 2xy′ + 2y = 0 has y₁ = x. Its second solution is y₂ = (x/2) ln((1 + x)/(1 − x)) − 1. Find y₂(1/2).', 'ln(3)/4-1'),
+    num(4, 4, 'B', 'y″ − (2/x²)y = 0 has y₁ = x². A second solution has the form y₂ = xᵐ with m ≠ 2. Find m.', '-1'),
+    sym(4, 4, 'y″ − 2ay′ + a²y = 0 has y₁ = e^(ax). With y = v·y₁, v(0) = 0 and v′(0) = 1, find y₂.', 'y₂', ['a', 'x'], 'x*e^(a*x)'),
+
+    // ==== 5 Power Series Solutions
+    mc(5, 1, 'A', 'x = 0 is an ordinary point of y″ + xy = 0 because:', 'The coefficients are analytic at x = 0', ['The solution is zero there', 'The equation is first order', 'Every term vanishes at x = 0']),
+    mc(5, 1, 'B', 'Putting y = Σ aₙxⁿ into y′ = y gives the recurrence:', 'aₙ₊₁ = aₙ/(n + 1)', ['aₙ₊₁ = aₙ', 'aₙ₊₁ = (n + 1)aₙ', 'aₙ = 0']),
+    num(5, 2, 'A', 'Solve y′ = 2y with y = Σ aₙxⁿ and a₀ = 1. Find a₃.', '4/3'),
+    num(5, 2, 'B', 'Solve y″ + y = 0 with y = Σ aₙxⁿ, a₀ = 1 and a₁ = 0. Find a₂.', '-1/2'),
+    sym(5, 2, 'For y″ + y = 0 with y = Σ aₙxⁿ, find aₙ₊₂ in terms of aₙ and n. (Type aₙ as an.)', 'aₙ₊₂', ['an', 'n'], '-an/((n+2)(n+1))'),
+    num(5, 3, 'A', 'For Airy\'s equation y″ − xy = 0 with a₀ = 1 and a₁ = 0, find a₃.', '1/6'),
+    num(5, 3, 'B', 'y″ + xy′ + y = 0 gives aₙ₊₂ = −aₙ/(n + 2). With a₀ = 1, find a₄.', '1/8'),
+    sym(5, 3, 'The power series solution of y″ + y = 0 with y(0) = 0 and y′(0) = 1 sums to which function?', 'y(x)', ['x'], 'sin(x)'),
+    num(5, 4, 'A', 'What is the guaranteed radius of convergence of a power series solution about x = 0 of (1 + x²)y″ + y = 0?', '1'),
+    num(5, 4, 'B', 'Find the larger root of the indicial equation of x²y″ + xy′ + (x² − 1/4)y = 0 at x = 0.', '1/2'),
+    sym(5, 4, 'For the Euler equation x²y″ + a·xy′ + b·y = 0, the indicial equation is r² + (a − 1)r + b = 0. Find its larger root.', 'r', ['a', 'b'], '(1-a+sqrt((a-1)^2-4b))/2', { ranges: { a: [3, 5], b: [0.1, 0.5] } }),
+
+    // ==== 6 Vector Algebra
+    mc(6, 1, 'A', 'The scalar triple product a · (b × c) gives:', 'The signed volume of the parallelepiped on a, b, c', ['The area of a triangle', 'A vector perpendicular to a', 'Zero for all vectors']),
+    mc(6, 1, 'B', 'Which is always true?', 'a × b = −(b × a)', ['a × b = b × a', 'a × b is a scalar', 'a × a = |a|²']),
+    num(6, 2, 'A', 'Find ⟨2, −1, 3⟩ · ⟨1, 4, 2⟩.', '4'),
+    vec(6, 2, 'B', 'Find ⟨1, 0, 2⟩ × ⟨0, 3, 1⟩.', ['-6', '-1', '3']),
+    sym(6, 2, 'Find the scalar projection of ⟨x, y, 0⟩ onto ⟨1, 1, 0⟩.', 'comp', ['x', 'y'], '(x+y)/sqrt(2)'),
+    num(6, 3, 'A', 'Find ⟨1, 2, 3⟩ · (⟨0, 1, 4⟩ × ⟨5, 6, 0⟩).', '1'),
+    vec(6, 3, 'B', 'Let a = ⟨1, 1, 0⟩, b = ⟨1, 0, 0⟩ and c = ⟨0, 1, 0⟩. Find a × (b × c).', ['1', '-1', '0']),
+    sym(6, 3, 'Vectors a and b have |a| = A, |b| = B and a · b = D. Find |a × b|.', '|a × b|', ['A', 'B', 'D'], 'sqrt(A^2*B^2-D^2)', { ranges: { A: [1, 2], B: [1, 2], D: [0.1, 0.5] } }),
+    num(6, 4, 'A', 'Find cos θ for the angle θ between a diagonal of a cube and one of its edges.', '1/sqrt(3)'),
+    num(6, 4, 'B', 'Find the distance from the point (1, 1, 1) to the line through the origin in the direction ⟨1, 0, 0⟩.', 'sqrt(2)'),
+    sym(6, 4, 'Find the area of the triangle with vertices (a, 0, 0), (0, b, 0) and (0, 0, c).', 'Area', ['a', 'b', 'c'], 'sqrt(a^2*b^2+b^2*c^2+c^2*a^2)/2'),
+
+    // ==== 7 Vector Calculus
+    mc(7, 1, 'A', 'For every smooth vector field F, ∇ · (∇ × F) equals:', '0', ['F', '∇F', '1']),
+    mc(7, 1, 'B', 'For every smooth scalar field f, ∇ × (∇f) equals:', 'The zero vector', ['∇²f', '∇f', 'It is undefined']),
+    num(7, 2, 'A', 'Find ∇ · ⟨x², xy, z⟩ at (1, 1, 1).', '4'),
+    vec(7, 2, 'B', 'Find ∇(x²yz) at (1, 2, 3).', ['12', '3', '2']),
+    sym(7, 2, 'Find ∇²(x²y + yz²).', '∇²f', ['x', 'y', 'z'], '4y'),
+    num(7, 3, 'A', 'Let r = ⟨x, y, z⟩. Find ∇ · r.', '3'),
+    vec(7, 3, 'B', 'Find ∇ × ⟨z, x, y⟩.', ['1', '1', '1']),
+    sym(7, 3, 'Let r = ⟨x, y, z⟩ and r = |r|. Find ∇ · (rⁿ r) in terms of n and r.', '∇ · (rⁿ r)', ['n', 'r'], '(n+3)*r^n'),
+    num(7, 4, 'A', 'Find the outward flux of ⟨x, y, z⟩ through the surface of the unit cube [0, 1]³.', '3'),
+    num(7, 4, 'B', 'Evaluate ∮ ⟨−y, x, 0⟩ · dr counterclockwise around the circle of radius 3 in the xy-plane.', '18pi'),
+    sym(7, 4, 'Find the outward flux of ⟨x, y, z⟩ through the sphere of radius R.', 'Φ', ['R'], '4pi*R^3'),
+
+    // ==== 8 Vector Spaces
+    mc(8, 1, 'A', 'Which of these is a vector space under the usual operations?', 'All polynomials of degree at most 2', ['All polynomials of degree exactly 2', 'All vectors in ℝ² with x ≥ 0', 'All vectors in ℝ³ with z = 1']),
+    mc(8, 1, 'B', 'Vectors v₁, …, vₖ are linearly independent when:', 'The only combination equal to zero has every coefficient zero', ['They are all orthogonal', 'They all have length 1', 'There are at most three of them']),
+    num(8, 2, 'A', 'What is the dimension of the space of polynomials of degree at most 3?', '4'),
+    num(8, 2, 'B', 'With ⟨f, g⟩ = ∫₀¹ f g dx, find ⟨x, x²⟩.', '1/4'),
+    sym(8, 2, 'With ⟨f, g⟩ = ∫₀^a f g dx, find the norm of f(x) = x.', '‖x‖', ['a'], 'sqrt(a^3/3)'),
+    num(8, 3, 'A', 'For which k are ⟨1, 2, 3⟩, ⟨0, 1, k⟩ and ⟨1, 3, 5⟩ linearly dependent?', '2'),
+    num(8, 3, 'B', 'What is the dimension of the null space of the matrix [[1, 2], [2, 4]]?', '1'),
+    sym(8, 3, 'The projection of v = ⟨a, b⟩ onto u = ⟨1, 1⟩ is c·u. Find c.', 'c', ['a', 'b'], '(a+b)/2'),
+    num(8, 4, 'A', 'Apply Gram–Schmidt to {1, x, x²} on [−1, 1] with ⟨f, g⟩ = ∫ f g dx. The third vector is x² + d. Find d.', '-1/3'),
+    vec(8, 4, 'B', 'Write ⟨3, 1⟩ in the basis {⟨1, 1⟩, ⟨1, −1⟩}. Give the coordinates (c₁, c₂).', ['2', '1']),
+    sym(8, 4, 'Find c > 0 so that c·x has norm 1 on [−L, L], with ⟨f, g⟩ = ∫ f g dx.', 'c', ['L'], 'sqrt(3/(2L^3))'),
+
+    // ==== 9 Linear Operators
+    mc(9, 1, 'A', 'An operator L is linear when:', 'L(au + bv) = aL(u) + bL(v)', ['L(u) = u for every u', 'L(uv) = L(u)L(v)', 'L(0) = 1']),
+    mc(9, 1, 'B', 'The eigenvalues of a Hermitian (self-adjoint) operator are always:', 'Real', ['Purely imaginary', 'Zero', 'Of absolute value 1']),
+    num(9, 2, 'A', 'Find the larger eigenvalue of [[2, 0], [0, 5]].', '5'),
+    num(9, 2, 'B', 'D = d/dx acting on e^(3x) gives λe^(3x). Find λ.', '3'),
+    sym(9, 2, 'Let f = e^(kx). Compute (d/dx)(x f) − x (d/dx)f.', '[D, x]f', ['k', 'x'], 'e^(k*x)'),
+    num(9, 3, 'A', 'Find the larger eigenvalue of [[2, 1], [1, 2]].', '3'),
+    vec(9, 3, 'B', 'Find an eigenvector of [[2, 1], [1, 2]] for the eigenvalue 3, scaled so its first component is 1.', ['1', '1']),
+    sym(9, 3, 'For b > 0, find the larger eigenvalue of [[a, b], [b, a]].', 'λ', ['a', 'b'], 'a+b'),
+    num(9, 4, 'A', 'Let A = [[0, 1], [0, 0]] and B = [[0, 0], [1, 0]]. Find the top-left entry of the commutator AB − BA.', '1'),
+    num(9, 4, 'B', 'Find the larger eigenvalue of the Hermitian matrix [[1, i], [−i, 1]].', '2'),
+    sym(9, 4, 'Find the eigenvalues λₙ of d²/dx² on [0, L] with f(0) = f(L) = 0.', 'λₙ', ['n', 'L'], '-(n*pi/L)^2')
+  ];
+
+  // ---------------------------------------------------------- expression reader (numbers, exact values and formulas)
+  var FUNCS = ['sqrt', 'sin', 'cos', 'tan', 'ln', 'exp'];
+  var DISPLAY = { theta: 'θ', phi: 'φ', rho: 'ρ', omega: 'ω', pi: 'π', an: 'aₙ' };
+  var SUBDIGITS = '₀₁₂₃₄₅₆₇₈₉';
+  function showVar(n) {
+    if (DISPLAY[n]) { return DISPLAY[n]; }
+    return n.replace(/\d+$/, function (d) { return d.split('').map(function (c) { return SUBDIGITS[+c]; }).join(''); });
+  }
+  function normalize(raw) {
+    return String(raw || '')
+      .replace(/[−–—]/g, '-').replace(/[×·∙⋅]/g, '*').replace(/÷/g, '/').replace(/\*\*/g, '^')
+      .replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹]+/g, function (m) { return '^' + m.split('').map(function (c) { return '⁰¹²³⁴⁵⁶⁷⁸⁹'.indexOf(c); }).join(''); })
+      .replace(/√/g, 'sqrt')
+      .replace(/[₀-₉]/g, function (c) { return String(c.charCodeAt(0) - 0x2080); })
+      .replace(/θ/g, 'theta').replace(/[φϕ]/g, 'phi').replace(/ρ/g, 'rho').replace(/ω/g, 'omega').replace(/π/g, 'pi')
+      .replace(/[_\s]/g, '');
+  }
+  function SymErr(msg) { this.message = msg; }
+  function lex(s, vars) {
+    var consts = ['pi'].concat(vars.indexOf('e') < 0 ? ['e'] : []);
+    var names = vars.concat(FUNCS, consts).sort(function (a, b) { return b.length - a.length; });
+    var out = [], i = 0;
+    while (i < s.length) {
+      var ch = s[i], rest = s.slice(i);
+      if (/[0-9.]/.test(ch)) {
+        var m = /^(\d+\.?\d*|\.\d+)/.exec(rest);
+        if (!m) { throw new SymErr('There is a stray decimal point.'); }
+        out.push({ t: 'num', v: parseFloat(m[0]) }); i += m[0].length; continue;
+      }
+      if ('+-*/^()'.indexOf(ch) >= 0) { out.push({ t: ch }); i++; continue; }
+      if (/[A-Za-z]/.test(ch)) {
+        var hit = null, k;
+        for (k = 0; k < names.length && !hit; k++) { if (rest.slice(0, names[k].length) === names[k]) { hit = names[k]; } }
+        if (!hit) {
+          var c = names.filter(function (n) { return rest.slice(0, n.length).toLowerCase() === n.toLowerCase(); });
+          if (c.length && c.filter(function (n) { return n.length === c[0].length; }).length === 1) { hit = c[0]; }
+        }
+        if (!hit) {
+          throw new SymErr('We don\'t know "' + /^[A-Za-z]+/.exec(rest)[0] + '". ' +
+            (vars.length ? 'Use only the letters on the buttons (plus pi, e, sqrt, sin, cos, tan, ln).' : 'Type a number or an exact value such as 2pi/3, sqrt(2) or ln(2).'));
+        }
+        if (FUNCS.indexOf(hit) >= 0) { out.push({ t: 'fn', v: hit }); }
+        else if (consts.indexOf(hit) >= 0 && vars.indexOf(hit) < 0) { out.push({ t: 'const', v: hit }); }
+        else { out.push({ t: 'var', v: hit }); }
+        i += hit.length; continue;
+      }
+      if (ch === '=') { throw new SymErr('Type only the answer, without an = sign.'); }
+      if (ch === ',') { throw new SymErr('Use a point for decimals, not a comma.'); }
+      throw new SymErr('We can\'t read the symbol "' + ch + '".');
+    }
+    return out;
+  }
+  function parseExpr(raw, vars) {
+    vars = vars || [];
+    var s = normalize(raw);
+    if (!s) { return { error: 'Your answer appears here as you type.' }; }
+    var eq = /^([A-Za-z][A-Za-z0-9]*)=(.+)$/.exec(s);
+    if (eq) { s = eq[2]; }
+    try {
+      var toks = lex(s, vars), i = 0;
+      var peek = function () { return toks[i] || {}; };
+      var startsAtom = function (t) { return t.t === 'num' || t.t === 'var' || t.t === 'const' || t.t === 'fn' || t.t === '('; };
+      var expr, unary;
+      var atom = function () {
+        var t = toks[i];
+        if (!t) { throw new SymErr('The answer stops too early. Something is missing at the end.'); }
+        if (t.t === 'num') { i++; return { k: 'num', v: t.v }; }
+        if (t.t === 'var') { i++; return { k: 'var', v: t.v }; }
+        if (t.t === 'const') { i++; return { k: t.v }; }
+        if (t.t === '(') {
+          i++; var e = expr();
+          if (peek().t !== ')') { throw new SymErr('A bracket "(" is never closed.'); }
+          i++; return { k: 'par', a: e };
+        }
+        if (t.t === 'fn') {
+          i++;
+          if (!toks[i]) { throw new SymErr(t.v + ' needs something after it, like ' + t.v + '(2).'); }
+          var arg = peek().t === '(' ? atom() : power();
+          return { k: 'fn', f: t.v, a: arg.k === 'par' ? arg.a : arg };
+        }
+        throw new SymErr('Something is missing before "' + t.t + '".');
+      };
+      var power = function () {
+        var b = atom();
+        if (peek().t === '^') { i++; return { k: 'pow', a: b, b: unary() }; }
+        return b;
+      };
+      unary = function () {
+        if (peek().t === '-') { i++; return { k: 'neg', a: unary() }; }
+        if (peek().t === '+') { i++; return unary(); }
+        return power();
+      };
+      var term = function () {
+        var v = unary();
+        for (;;) {
+          var t = peek();
+          if (t.t === '*' || t.t === '/') { i++; var r = unary(); v = t.t === '*' ? { k: 'mul', a: v, b: r } : { k: 'div', a: v, b: r }; }
+          else if (startsAtom(t)) { v = { k: 'mul', a: v, b: power() }; }
+          else { return v; }
+        }
+      };
+      expr = function () {
+        var v = term();
+        while (peek().t === '+' || peek().t === '-') { var op = toks[i++].t; v = { k: 'add', op: op, a: v, b: term() }; }
+        return v;
+      };
+      var ast = expr();
+      if (i < toks.length) { throw new SymErr(toks[i].t === ')' ? 'There is an extra ")".' : 'We can\'t read the end of your answer.'); }
+      return { ast: ast };
+    } catch (e) {
+      if (e instanceof SymErr) { return { error: e.message }; }
+      throw e;
+    }
+  }
+  var FN = { sqrt: Math.sqrt, sin: Math.sin, cos: Math.cos, tan: Math.tan, ln: Math.log, exp: Math.exp };
+  function evalAst(n, env) {
+    switch (n.k) {
+      case 'num': return n.v;
+      case 'var': return env[n.v];
+      case 'pi': return Math.PI;
+      case 'e': return Math.E;
+      case 'par': return evalAst(n.a, env);
+      case 'neg': return -evalAst(n.a, env);
+      case 'add': return n.op === '+' ? evalAst(n.a, env) + evalAst(n.b, env) : evalAst(n.a, env) - evalAst(n.b, env);
+      case 'mul': return evalAst(n.a, env) * evalAst(n.b, env);
+      case 'div': return evalAst(n.a, env) / evalAst(n.b, env);
+      case 'pow': return Math.pow(evalAst(n.a, env), evalAst(n.b, env));
+      case 'fn': return FN[n.f](evalAst(n.a, env));
+    }
+    return NaN;
+  }
+  function fmt(v) {
+    if (v === 0) { return '0'; }
+    var a = Math.abs(v);
+    if (a >= 1e6 || a < 1e-4) { return v.toExponential(4); }
+    return String(parseFloat(v.toPrecision(6)));
+  }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function renderAst(n) {
+    function strip(x) { return x.k === 'par' ? strip(x.a) : x; }
+    function paren(x, need) { var h = R(x); return need ? '(' + h + ')' : h; }
+    function leadsWithNumber(x) {
+      x = strip(x);
+      if (x.k === 'num' || x.k === 'neg') { return true; }
+      if (x.k === 'mul' || x.k === 'pow') { return leadsWithNumber(x.a); }
+      return false;
+    }
+    function simple(x) { return x.k === 'num' || x.k === 'var' || x.k === 'pi' || x.k === 'e' || x.k === 'fn'; }
+    function R(x) {
+      var s;
+      switch (x.k) {
+        case 'num': return esc(String(x.v));
+        case 'var': return /^[A-Za-z]/.test(showVar(x.v)) ? '<i>' + esc(showVar(x.v)) + '</i>' : esc(showVar(x.v));
+        case 'pi': return 'π';
+        case 'e': return '<i>e</i>';
+        case 'par': s = strip(x.a); return (s.k === 'div' || simple(s)) ? R(s) : '(' + R(s) + ')';
+        case 'neg': s = strip(x.a); return '−' + paren(s, s.k === 'add' || s.k === 'neg');
+        case 'add': s = strip(x.b); return R(x.a) + (x.op === '+' ? ' + ' : ' − ') + paren(s, s.k === 'add' || s.k === 'neg');
+        case 'mul':
+          var a = strip(x.a), b = strip(x.b);
+          return paren(a, a.k === 'add') + (leadsWithNumber(b) ? ' · ' : '&#8239;') + paren(b, b.k === 'add' || b.k === 'neg');
+        case 'div': return '<span class="frac"><span>' + R(strip(x.a)) + '</span><span>' + R(strip(x.b)) + '</span></span>';
+        case 'pow':
+          var base = strip(x.a);
+          return paren(base, !(base.k === 'num' || base.k === 'var' || base.k === 'pi' || base.k === 'e')) + '<sup>' + R(strip(x.b)) + '</sup>';
+        case 'fn':
+          if (x.f === 'sqrt') { return '<span class="rad">√<span>' + R(strip(x.a)) + '</span></span>'; }
+          return x.f + '(' + R(strip(x.a)) + ')';
+      }
+      return '';
+    }
+    return R(n);
+  }
+  // TeX for MathJax previews (the HTML renderAst above is the fallback when MathJax has not loaded).
+  var TEXVAR = { theta: '\\theta', mu: '\\mu', rho: '\\rho', lambda: '\\lambda', omega: '\\omega', phi: '\\phi', dT: '\\Delta T' };
+  function renderTex(n, units) {
+    function strip(x) { return x.k === 'par' ? strip(x.a) : x; }
+    function simple(x) { return x.k === 'num' || x.k === 'var' || x.k === 'pi' || x.k === 'e'; }
+    function lead(x) { x = strip(x); if (x.k === 'num' || x.k === 'neg') { return true; } if (x.k === 'mul' || x.k === 'pow') { return lead(x.a); } return false; }
+    function wrap(h) { return /\\frac|\\sqrt/.test(h) ? '\\left(' + h + '\\right)' : '(' + h + ')'; }
+    function V(name) {
+      if (units) { return '\\mathrm{' + name + '}'; }
+      if (TEXVAR[name]) { return TEXVAR[name]; }
+      var m = /^([A-Za-z])([A-Za-z0-9]+)$/.exec(name);
+      return m ? m[1] + '_{' + m[2] + '}' : name;
+    }
+    function T(x) {
+      var s, a, b;
+      switch (x.k) {
+        case 'num': return String(x.v);
+        case 'var': return V(x.v);
+        case 'pi': return '\\pi ';
+        case 'e': return 'e';
+        case 'par': s = strip(x.a); return (s.k === 'div' || s.k === 'fn' || simple(s)) ? T(s) : wrap(T(s));
+        case 'neg': s = strip(x.a); return '-' + (s.k === 'add' || s.k === 'neg' ? wrap(T(s)) : T(s));
+        case 'add': s = strip(x.b); return T(x.a) + (x.op === '+' ? ' + ' : ' - ') + (s.k === 'add' || s.k === 'neg' ? wrap(T(s)) : T(s));
+        case 'mul':
+          a = strip(x.a); b = strip(x.b);
+          return (a.k === 'add' ? wrap(T(a)) : T(a)) + (lead(b) ? ' \\cdot ' : (units ? '\\,' : ' ')) + (b.k === 'add' || b.k === 'neg' ? wrap(T(b)) : T(b));
+        case 'div': return '\\frac{' + T(strip(x.a)) + '}{' + T(strip(x.b)) + '}';
+        case 'pow':
+          s = strip(x.a); b = strip(x.b);
+          var ex = b.k === 'div' ? T(strip(b.a)) + '/' + T(strip(b.b)) : T(b);
+          return (simple(s) ? '{' + T(s) + '}' : wrap(T(s))) + '^{' + ex + '}';
+        case 'fn':
+          if (x.f === 'sqrt') { return '\\sqrt{' + T(strip(x.a)) + '}'; }
+          if (x.f === 'exp') { return 'e^{' + T(strip(x.a)) + '}'; }
+          return '\\' + x.f + wrap(T(strip(x.a)));
+      }
+      return '';
+    }
+    return T(n);
+  }
+  function valueOf(src) { var p = parseExpr(src, []); if (p.error) { throw new Error('Bad key ' + src + ': ' + p.error); } return evalAst(p.ast, {}); }
+
+  ITEMS.forEach(function (it) {
+    it.id = 'T' + (it.ch < 10 ? '0' : '') + it.ch + '-' + it.rung + it.v;
+    if (it.type === 'num') { it.val = valueOf(it.ans); }
+    if (it.type === 'vec') { it.vals = it.ans.map(valueOf); }
+  });
+
+  // Seeded sample points so a given formula always grades the same way.
+  function lcg(seed) { var s = seed >>> 0; return function () { s = (Math.imul(s, 1664525) + 1013904223) >>> 0; return s / 4294967296; }; }
+  function samplePoints(item) {
+    if (item._pts) { return item._pts; }
+    var key = parseExpr(item.key, item.vars);
+    if (key.error) { throw new Error('Bad key in ' + item.id + ': ' + key.error); }
+    var seed = 0; item.id.split('').forEach(function (c) { seed = seed * 31 + c.charCodeAt(0); });
+    var rng = lcg(seed), pts = [];
+    for (var n = 0; n < 300 && pts.length < 8; n++) {
+      var env = {};
+      item.vars.forEach(function (v) { var r = item.ranges[v] || [0.5, 2.5]; env[v] = r[0] + rng() * (r[1] - r[0]); });
+      var a = evalAst(key.ast, env);
+      if (isFinite(a) && Math.abs(a) > 1e-9) { pts.push({ env: env, a: a }); }
+    }
+    item._pts = pts;
+    return pts;
+  }
+
+  // ---------------------------------------------------------- slip patterns in wrong answers
+  var TAGS = {
+    sign: { name: 'Sign or orientation', say: 'Check minus signs, the order in a cross product (u × v = −v × u), and the direction a curve or surface is traversed.' },
+    pi: { name: 'Missing π factor', say: 'Check the angle limits (θ from 0 to 2π, φ from 0 to π) and whether a full turn was integrated.' },
+    two: { name: 'Factor of 2', say: 'Watch the ½ in antiderivatives like ∫ r dr = r²/2, and symmetry (half circles, upper hemispheres).' },
+    square: { name: 'Squares and square roots', say: 'Check whether a length needs a square root, and that r² or ρ² was squared.' },
+    invert: { name: 'Upside-down fraction', say: 'Check which quantity belongs on top, e.g. in curvature, projections and Jacobians.' },
+    scale: { name: 'Right direction, wrong length', say: 'The vector pointed the right way but had the wrong length. Check whether a unit vector or a projection was wanted.' },
+    'const': { name: 'Off by a constant factor', say: 'The answer had the right shape but a constant was off. Often a missing Jacobian factor, ½, or limit of integration.' }
+  };
+  function close(x, y, tol) { return Math.abs(x - y) <= tol * Math.max(Math.abs(x), Math.abs(y)) + 1e-9; }
+  function diagnose(S, A, tol, kind) {
+    function all(f) { for (var j = 0; j < S.length; j++) { if (!f(S[j], A[j])) { return false; } } return S.length > 0; }
+    if (all(function (s, a) { return close(s, -a, tol); })) { return 'sign'; }
+    var P = Math.PI;
+    if (all(function (s, a) { return close(s, a * P, tol) || close(s, a / P, tol) || close(s, 2 * a * P, tol) || close(s, a / (2 * P), tol); })) { return 'pi'; }
+    if (all(function (s, a) { return close(s, 2 * a, tol) || close(s, a / 2, tol); })) { return 'two'; }
+    var telling = A.filter(function (a) { return Math.abs(Math.abs(a) - 1) > 0.05; }).length;
+    var allTelling = function (f) { return telling > 0 && all(function (s, a) { return Math.abs(Math.abs(a) - 1) <= 0.05 || f(s, a); }); };
+    if (allTelling(function (s, a) { return close(s, a * a, tol) || close(s * s, a * a * a * a, tol) || close(s * s, Math.abs(a), tol); })) { return 'square'; }
+    if (allTelling(function (s, a) { return close(s, 1 / a, tol); })) { return 'invert'; }
+    if (kind === 'sym') {
+      var r0 = S[0] / A[0];
+      if (isFinite(r0) && all(function (s, a) { return close(s / a, r0, tol); })) { return 'const'; }
+    }
+    return null;
+  }
+
+  function gradeNum(item, raw) {
+    var p = parseExpr(raw, []);
+    if (p.error) { return { status: 'invalid', message: p.error }; }
+    var v = evalAst(p.ast, {});
+    if (!isFinite(v)) { return { status: 'invalid', message: 'That value is undefined. Check for division by zero or a square root of a negative.' }; }
+    if (close(v, item.val, SETTINGS.tolerance)) { return { status: 'correct', value: v }; }
+    return { status: 'wrong', value: v, tag: diagnose([v], [item.val], SETTINGS.tolerance, 'num') };
+  }
+  function gradeVec(item, raws) {
+    var vals = [];
+    for (var j = 0; j < item.vals.length; j++) {
+      var p = parseExpr(raws[j], []);
+      if (p.error) { return { status: 'invalid', message: 'Component ' + (j + 1) + ': ' + (String(raws[j] || '').trim() ? p.error : 'fill in every box.') }; }
+      vals.push(evalAst(p.ast, {}));
+    }
+    var tol = SETTINGS.tolerance;
+    if (vals.every(function (v, j) { return close(v, item.vals[j], tol); })) { return { status: 'correct' }; }
+    if (vals.every(function (v, j) { return close(v, -item.vals[j], tol); })) { return { status: 'wrong', tag: 'sign' }; }
+    var nz = item.vals.map(function (a, j) { return j; }).filter(function (j) { return Math.abs(item.vals[j]) > 1e-12; });
+    var zerosOk = item.vals.every(function (a, j) { return Math.abs(a) > 1e-12 || Math.abs(vals[j]) < 1e-9; });
+    if (zerosOk && nz.length) {
+      var r = vals[nz[0]] / item.vals[nz[0]];
+      if (r > 0 && nz.every(function (j) { return close(vals[j] / item.vals[j], r, tol); })) { return { status: 'wrong', tag: 'scale' }; }
+    }
+    return { status: 'wrong', tag: null };
+  }
+  function gradeSym(item, raw) {
+    var p = parseExpr(raw, item.vars);
+    if (p.error) { return { status: 'invalid', message: p.error }; }
+    var pts = samplePoints(item), S = [], A = [];
+    pts.forEach(function (pt) { S.push(evalAst(p.ast, pt.env)); A.push(pt.a); });
+    var finite = S.every(function (s) { return isFinite(s); });
+    var ok = finite && S.every(function (s, j) { return close(s, A[j], 1e-6); });
+    if (!ok && finite && item.upToConst) {
+      var d0 = S[0] - A[0];
+      ok = S.every(function (s, j) { return Math.abs((s - A[j]) - d0) <= 1e-6 * (1 + Math.abs(A[j]) + Math.abs(s)); });
+    }
+    if (ok) { return { status: 'correct' }; }
+    return { status: 'wrong', tag: finite ? diagnose(S, A, 1e-6, 'sym') : null };
+  }
+  function grade(item, raw) {
+    if (item.type === 'sym') { return gradeSym(item, raw); }
+    if (item.type === 'vec') { return gradeVec(item, raw); }
+    return gradeNum(item, raw);
+  }
+
+  // ---------------------------------------------------------- engine
+  var STATUS = [
+    { key: 'l0', label: 'New', plan: 'Learn this topic from the start' },
+    { key: 'l1', label: 'Basics', plan: 'Learn the definitions, then work through examples' },
+    { key: 'l2', label: 'Solid', plan: 'Practise multi-step problems' },
+    { key: 'l3', label: 'Strong', plan: 'Quick review, then challenge problems' },
+    { key: 'l4', label: 'Mastered', plan: 'Skip: you already know this topic' }
+  ];
+  var BANDS = [
+    { max: 0.75, name: 'New to these topics', say: 'Start from the basics: calculus and series first, then ODEs and vectors.' },
+    { max: 1.75, name: 'Beginner', say: 'Knows some definitions but not yet the computations. Work through worked examples in each topic.' },
+    { max: 2.5, name: 'Intermediate', say: 'Can do one-step computations. Next: multi-step problems in each topic.' },
+    { max: 3.25, name: 'Advanced', say: 'Handles multi-step problems. Focus on the weaker topics below and on challenge problems.' },
+    { max: 99, name: 'Very experienced', say: 'Solved the hardest questions in nearly every topic. Go straight to exam-style and challenge problems.' }
+  ];
+  function fam(it) { return it.type === 'vec' ? 'num' : it.type; }
+
+  function create(opts) {
+    opts = opts || {};
+    var random = opts.rng || Math.random;
+    var maxItems = opts.maxItems || SETTINGS.max_items;
+    var asked = [], pending = null, chIdx = 0;
+    var st = CHAPTERS.map(function (c) { return { n: c[0], title: c[1], rungs: {}, cur: null, phase: null, done: false, level: null, retried: {}, probing: false }; });
+
+    function startRung() {
+      var done = st.filter(function (c) { return c.done; });
+      if (!done.length) { return 1; }
+      var mean = done.reduce(function (a, c) { return a + c.level; }, 0) / done.length;
+      return Math.max(1, Math.min(3, Math.round(mean)));
+    }
+    function pick(ch, rung, forceFam) {
+      var used = {};
+      asked.forEach(function (a) { used[a.id] = true; });
+      var f = forceFam;
+      if (!f) {
+        if (rung === 1) { f = 'mc'; }
+        else {
+          var calc = asked.filter(function (a) { return a.fam !== 'mc' && !a.probe; }).length;
+          f = calc % SETTINGS.sym_every === 1 ? 'sym' : 'num';
+        }
+      }
+      var of = function (t, fresh) { return ITEMS.filter(function (it) { return it.ch === ch && it.rung === rung && fam(it) === t && (!fresh || !used[it.id]); }); };
+      var pool = of(f, true);
+      if (!pool.length && f === 'sym') { pool = of('num', true); }
+      if (!pool.length) { pool = of(f === 'sym' ? 'num' : f, false); }
+      return pool[Math.floor(random() * pool.length)];
+    }
+    function next() {
+      if (pending) { return pending; }
+      if (asked.length >= maxItems) { return null; }
+      while (chIdx < st.length) {
+        var c = st[chIdx];
+        if (c.done) { chIdx++; continue; }
+        if (c.cur === null) { c.cur = startRung(); c.start = c.cur; c.phase = 'start'; }
+        pending = pick(c.n, c.cur, c.probing ? 'num' : null);
+        return pending;
+      }
+      return null;
+    }
+    function finishChapter(c, level) { c.level = level; c.done = true; chIdx++; }
+    function record(outcome, extra) {
+      if (!pending) { throw new Error('record() with no pending question'); }
+      extra = extra || {};
+      var item = pending, c = st[chIdx], r = c.cur;
+      var e = { id: item.id, ch: c.n, rung: r, fam: fam(item), outcome: outcome, probe: c.probing };
+      Object.keys(extra).forEach(function (k) { e[k] = extra[k]; });
+      asked.push(e);
+      pending = null;
+      // A missed formula question gets a numbers question at the same level before the level counts as failed.
+      if (item.type === 'sym' && outcome !== 'correct') { c.probing = true; return; }
+      if (outcome === 'skip' && extra.timedOut && !c.retried[r]) { c.retried[r] = true; return; }
+      var wasProbe = c.probing; c.probing = false;
+      var pass = outcome === 'correct';
+      c.rungs[r] = pass ? (wasProbe ? 'numonly' : 'pass') : 'fail';
+      if (pass) {
+        if (c.phase === 'start') { for (var k = 1; k < r; k++) { if (!c.rungs[k]) { c.rungs[k] = 'assumed'; } } }
+        if (c.phase === 'down' || r === 4) { return finishChapter(c, r); }
+        c.cur = r + 1; c.phase = 'up'; return;
+      }
+      if (c.phase === 'up' || r === 1) { return finishChapter(c, r - 1); }
+      c.cur = r - 1; c.phase = 'down';
+    }
+    function summary() {
+      var tested = st.filter(function (c) { return c.done; });
+      var mean = tested.length ? tested.reduce(function (a, c) { return a + c.level; }, 0) / tested.length : 0;
+      var band = BANDS.filter(function (b) { return mean < b.max; })[0];
+      var symAsked = asked.filter(function (a) { return a.fam === 'sym'; });
+      var counts = {};
+      asked.forEach(function (a) { if (a.tag) { counts[a.tag] = (counts[a.tag] || 0) + 1; } });
+      return {
+        chapters: st.map(function (c) { return { n: c.n, level: c.done ? c.level : null, rungs: [1, 2, 3, 4].map(function (k) { return c.rungs[k] || 'none'; }) }; }),
+        mean: mean, band: band, tags: counts,
+        symbolic: { asked: symAsked.length, right: symAsked.filter(function (a) { return a.outcome === 'correct'; }).length }
+      };
+    }
+    return { next: next, record: record, summary: summary, count: function () { return asked.length; } };
+  }
+
+  function makeId(ms, rng) {
+    var d = new Date(ms), L = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789', t = '', random = rng || Math.random;
+    for (var i = 0; i < 4; i++) { t += L[Math.floor(random() * L.length)]; }
+    function two(n) { return n < 10 ? '0' + n : String(n); }
+    return d.getUTCFullYear() + two(d.getUTCMonth() + 1) + two(d.getUTCDate()) + '-' + two(d.getUTCHours()) + two(d.getUTCMinutes()) + '-' + t;
+  }
+
+  return { CHAPTERS: CHAPTERS, ITEMS: ITEMS, SETTINGS: SETTINGS, STATUS: STATUS, BANDS: BANDS, TAGS: TAGS,
+           create: create, grade: grade, gradeNum: gradeNum, gradeVec: gradeVec, gradeSym: gradeSym, fmt: fmt, makeId: makeId,
+           parseExpr: parseExpr, evalAst: evalAst, renderAst: renderAst, renderTex: renderTex, showVar: showVar, samplePoints: samplePoints, diagnose: diagnose };
+})();
+if (typeof module === 'object' && module.exports) { module.exports = Calc3Diag; }
+</script>
+
+<script>
+/* The page: start screen, one question at a time, a results-JSON end screen, and a #report teacher view. */
+(function () {
+  'use strict';
+  if (typeof document === 'undefined') { return; }
+  var P = Calc3Diag, S = P.SETTINGS, app = document.getElementById('app');
+  var byId = {}; P.ITEMS.forEach(function (i) { byId[i.id] = i; });
+  var chTitle = {}; P.CHAPTERS.forEach(function (c) { chTitle[c[0]] = c[1]; });
+  var LIMIT = S.seconds_per_item;
+  var student = { name: '' }, engine = null, log = [], examStart = 0, examActive = false, cur = null;
+
+  function el(tag, attrs) {
+    var node = document.createElement(tag);
+    Object.keys(attrs || {}).forEach(function (k) {
+      if (k === 'class') { node.className = attrs[k]; }
+      else if (k === 'text') { node.textContent = attrs[k]; }
+      else if (k === 'html') { node.innerHTML = attrs[k]; }
+      else if (k.slice(0, 2) === 'on') { node.addEventListener(k.slice(2), attrs[k]); }
+      else { node.setAttribute(k, attrs[k]); }
+    });
+    function add(kid) {
+      if (kid === null || kid === undefined) { return; }
+      if (Array.isArray(kid)) { kid.forEach(add); return; }
+      node.appendChild(typeof kid === 'string' ? document.createTextNode(kid) : kid);
+    }
+    for (var i = 2; i < arguments.length; i++) { add(arguments[i]); }
+    return node;
+  }
+  function clear(n) { while (n.firstChild) { n.removeChild(n.firstChild); } }
+  function pad(n) { return n < 10 ? '0' + n : String(n); }
+  function clock(s) { return Math.floor(s / 60) + ':' + pad(s % 60); }
+  function chip(kind, label) { return el('span', { class: 'chip ' + kind, text: label }); }
+
+  var blurs = 0, lastBlur = 0;
+  window.addEventListener('blur', function () {
+    var now = Date.now();
+    if (!examActive || now - lastBlur < 1000) { return; }
+    lastBlur = now; blurs++;
+  });
+
+  // ------------------------------------------------------------ answer boxes
+  function mathHtml(raw, vars) { var r = P.parseExpr(raw, vars); return r.error ? null : P.renderAst(r.ast); }
+  // Typeset an expression with MathJax (SVG) when it has loaded; otherwise use the plain HTML rendering.
+  function mathNode(ast, units) {
+    var mj = window.MathJax;
+    if (mj && typeof mj.tex2svg === 'function') {
+      try {
+        if (!mathNode.styled && typeof mj.svgStylesheet === 'function') { document.head.appendChild(mj.svgStylesheet()); mathNode.styled = true; }
+        var span = el('span', { class: 'mj' });
+        span.appendChild(mj.tex2svg('\\displaystyle ' + P.renderTex(ast, units), { display: false }));
+        return span;
+      } catch (e) { /* fall through to HTML */ }
+    }
+    return el('span', { class: 'math' + (units ? ' units' : ''), html: P.renderAst(ast) });
+  }
+  function showPreview(box, raws, vars, isVec) {
+    clear(box);
+    var asts = [], err = null;
+    raws.forEach(function (raw, j) {
+      var r = P.parseExpr(raw, vars);
+      if (r.error) { if (!err) { err = (isVec && String(raw).trim() ? 'Component ' + (j + 1) + ': ' : '') + r.error; } asts.push(null); }
+      else { asts.push(r.ast); }
+    });
+    if (!asts.some(function (a) { return a; })) { box.appendChild(el('span', { class: 'lead', text: err })); return; }
+    box.appendChild(el('span', { class: 'lead', text: 'We read your answer as:' }));
+    if (isVec) {
+      var row = el('span', { class: 'vecprev' }, '⟨');
+      asts.forEach(function (a, j) {
+        if (j) { row.appendChild(document.createTextNode(', ')); }
+        row.appendChild(a ? mathNode(a) : document.createTextNode('□'));
+      });
+      row.appendChild(document.createTextNode('⟩'));
+      box.appendChild(row);
+      if (err) { box.appendChild(el('span', { class: 'lead', text: err })); }
+    } else {
+      box.appendChild(mathNode(asts[0]));
+      if (!vars.length && /[a-z(^/]/i.test(raws[0])) {
+        var v = P.evalAst(asts[0], {});
+        if (isFinite(v)) { box.appendChild(el('span', { class: 'small', text: '≈ ' + P.fmt(v) })); }
+      }
+    }
+  }
+  function insertAt(input, text, back) {
+    var v = input.value;
+    var a = typeof input.selectionStart === 'number' ? input.selectionStart : v.length;
+    var b = typeof input.selectionEnd === 'number' ? input.selectionEnd : v.length;
+    input.value = v.slice(0, a) + text + v.slice(b);
+    var p = a + text.length - (back || 0);
+    input.focus(); input.setSelectionRange(p, p);
+    input.dispatchEvent(new Event('input'));
+  }
+  function keyRow(target, vars) {
+    var b = vars.map(function (v) {
+      return el('button', { type: 'button', title: 'Type ' + v, onclick: function () { insertAt(target(), v); } }, P.showVar(v));
+    });
+    var ops = [['π', 'pi', 0], ['√( )', 'sqrt()', 1], ['e', 'e', 0], ['ln( )', 'ln()', 1], ['x²', '^2', 0], ['^', '^', 0], ['( )', '()', 1]];
+    return el('div', { class: 'keys', 'aria-label': 'Insert symbols' }, b,
+      ops.map(function (o) { return el('button', { type: 'button', class: 'op', onclick: function () { insertAt(target(), o[1], o[2]); } }, o[0]); }));
+  }
+  function answerBox(item, onEnter, say) {
+    var isVec = item.type === 'vec', vars = item.type === 'sym' ? item.vars : [];
+    var n = isVec ? item.vals.length : 1, inputs = [], last = null;
+    var pv = el('div', { class: 'preview', 'aria-live': 'polite' });
+    var refresh = function () { showPreview(pv, inputs.map(function (x) { return x.value; }), vars, isVec); };
+    for (var j = 0; j < n; j++) {
+      var inp = el('input', { type: 'text', autocomplete: 'off', autocapitalize: 'off', spellcheck: 'false',
+        'aria-label': isVec ? 'Component ' + (j + 1) : 'Your answer' });
+      inp.addEventListener('input', function () { say(''); refresh(); });
+      inp.addEventListener('focus', function (e) { last = e.target; });
+      inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); onEnter(); } });
+      ['paste', 'drop'].forEach(function (ev) { inp.addEventListener(ev, function (e) { e.preventDefault(); say('Pasting is turned off. Please type your answer.', 'err'); }); });
+      inputs.push(inp);
+    }
+    var row;
+    if (isVec) {
+      var kids = [el('span', { class: 'sep', text: '⟨' })];
+      inputs.forEach(function (x, j) { if (j) { kids.push(el('span', { class: 'sep', text: ',' })); } kids.push(x); });
+      kids.push(el('span', { class: 'sep', text: '⟩' }));
+      row = el('div', { class: 'answer-row vec' }, kids);
+    } else {
+      row = el('div', { class: 'answer-row' }, item.lhs ? el('span', { class: 'lead-in', text: item.lhs + ' =' }) : null, inputs[0]);
+    }
+    refresh();
+    return {
+      node: el('div', null, row, keyRow(function () { return last || inputs[0]; }, vars), pv),
+      value: function () { return isVec ? inputs.map(function (x) { return x.value.trim(); }) : inputs[0].value.trim(); },
+      text: function () { return isVec ? '⟨' + inputs.map(function (x) { return x.value.trim(); }).join(', ') + '⟩' : inputs[0].value.trim(); },
+      empty: function () { return inputs.every(function (x) { return !x.value.trim(); }); },
+      focus: function () { inputs[0].focus(); }
+    };
+  }
+
+  // ------------------------------------------------------------ start screen
+  function showStart() {
+    clear(app);
+    var demoNum = answerBox({ type: 'num' }, function () {}, function () {});
+    var demoSym = answerBox({ type: 'sym', vars: ['x', 'y'], lhs: '∂f/∂x' }, function () {}, function () {});
+    var nameIn = el('input', { type: 'text', id: 'name', autocomplete: 'off' });
+    var err = el('div', { class: 'msg err' });
+    app.appendChild(el('div', { class: 'card' },
+      el('h1', { text: S.title }),
+      el('ul', { class: 'rules' },
+        el('li', { text: 'Use pencil and paper. No calculator, AI, internet or books.' }),
+        el('li', { text: 'You have 4 minutes per question.' }),
+        el('li', { text: 'If you are stuck, press "I don\'t know".' }),
+        el('li', { text: 'At the end, copy your results and send them to the email.' }))));
+    app.appendChild(el('div', { class: 'card' },
+      el('label', { style: 'margin-top:0', text: 'Try typing numbers before the exam.' }), demoNum.node,
+      el('label', { style: 'margin-top:22px', text: 'Try typing formulas before the exam.' }), demoSym.node,
+      el('label', { for: 'name', style: 'margin-top:22px', text: 'Your name' }), nameIn, err,
+      el('div', { class: 'row', style: 'margin-top:12px' }, el('button', { class: 'primary', text: 'Begin the exam', onclick: function () {
+        var name = nameIn.value.trim();
+        if (!name) { err.textContent = 'Please enter your name.'; nameIn.focus(); return; }
+        student.name = name; begin();
+      } }))));
+  }
+
+  function begin() {
+    engine = P.create();
+    log = []; examStart = Date.now(); blurs = 0; examActive = true;
+    nextQuestion();
+  }
+  function nextQuestion() {
+    var item = engine.next();
+    if (!item) { examActive = false; showDone(); return; }
+    showQuestion(item, engine.count() + 1);
+  }
+
+  // ------------------------------------------------------------ question screen
+  function shuffle(a) {
+    a = a.slice();
+    for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; }
+    return a;
+  }
+  function showQuestion(item, number) {
+    clear(app);
+    cur = { item: item, start: Date.now(), done: false, timer: null, choice: null, box: null };
+    var timerEl = el('span', { class: 'timer' });
+    var msg = el('div', { class: 'msg', 'aria-live': 'polite' });
+    function say(t, kind) { msg.className = 'msg' + (kind ? ' ' + kind : ''); msg.textContent = t || ''; }
+    var body;
+    if (item.type === 'mc') {
+      var order = shuffle(item.opts.map(function (o, i) { return i; })), btns = [];
+      body = el('div', { class: 'opts', role: 'group', 'aria-label': 'Answer choices' }, order.map(function (idx, k) {
+        var b = el('button', { type: 'button', class: 'opt', 'aria-pressed': 'false', onclick: function () {
+          cur.choice = idx; btns.forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); }); say('');
+        } }, el('span', { class: 'key', text: 'ABCD'[k] }), el('span', { text: item.opts[idx] }));
+        btns.push(b); return b;
+      }));
+    } else {
+      cur.box = answerBox(item, function () { submit(); }, say);
+      body = el('div', null, item.type === 'sym' ? el('p', { class: 'hint', text: 'Answer with the letters on the buttons.' }) : null, cur.box.node);
+    }
+    function typed() { return item.type === 'mc' ? (cur.choice === null ? '' : item.opts[cur.choice]) : cur.box.text(); }
+    function submit() {
+      if (cur.done) { return; }
+      if (item.type === 'mc') {
+        if (cur.choice === null) { say('Choose an answer first, or press "I don\'t know".', 'err'); return; }
+        return finish(cur.choice === 0 ? 'correct' : 'wrong', typed(), {});
+      }
+      var res = P.grade(item, cur.box.value());
+      if (res.status === 'invalid') { say(res.message, 'err'); cur.box.focus(); return; }
+      finish(res.status, typed(), res.tag ? { tag: res.tag } : {});
+    }
+    app.appendChild(el('div', { class: 'card' },
+      el('div', { class: 'qhead' }, el('span', { class: 'where', text: 'Question ' + number + ' · ' + item.ch + '. ' + chTitle[item.ch] }), timerEl),
+      el('div', { class: 'prompt' }, el('p', { text: item.q })),
+      body, msg,
+      el('div', { class: 'row spread' },
+        el('button', { class: 'primary', text: 'Submit', onclick: submit }),
+        el('button', { class: 'quiet', text: "I don't know", onclick: function () { finish('skip', '', {}); } }))));
+    if (cur.box) { cur.box.focus(); }
+    var tick = function () {
+      var left = LIMIT - Math.floor((Date.now() - cur.start) / 1000);
+      timerEl.textContent = clock(Math.max(left, 0));
+      timerEl.className = 'timer' + (left <= 20 ? ' low' : '');
+      if (left <= 0 && !cur.done) {
+        var ok = item.type === 'mc' ? cur.choice === 0 : (!cur.box.empty() && P.grade(item, cur.box.value()).status === 'correct');
+        finish(ok ? 'correct' : 'skip', typed(), { timedOut: true });
+      }
+    };
+    cur.timer = setInterval(tick, 250); tick();
+  }
+  function finish(outcome, value, extra) {
+    if (cur.done) { return; }
+    cur.done = true;
+    clearInterval(cur.timer);
+    var seconds = Math.round((Date.now() - cur.start) / 1000);
+    var rec = { id: cur.item.id, answer: String(value || ''), outcome: outcome, seconds: seconds, timedOut: !!extra.timedOut, tag: extra.tag || null };
+    engine.record(outcome, { seconds: seconds, timedOut: rec.timedOut, tag: rec.tag });
+    log.push(rec);
+    nextQuestion();
+  }
+
+  // ------------------------------------------------------------ student end screen: just the results JSON
+  var RCODE = { pass: 'p', fail: 'f', assumed: 'a', numonly: 'n', none: '-' };
+  var RNAME = { p: 'pass', f: 'fail', a: 'assumed', n: 'numonly', '-': 'none' };
+  var OCODE = { correct: 'c', wrong: 'w', skip: 's' };
+  function resultData(sum) {
+    return {
+      exam: S.exam, version: 1, id: P.makeId(Date.now()), name: student.name,
+      date: new Date().toISOString().replace(/\.\d+Z$/, 'Z'),
+      seconds: Math.round((Date.now() - examStart) / 1000), switches: blurs,
+      band: sum.band.name, avg: Math.round(sum.mean * 100) / 100,
+      topics: sum.chapters.map(function (c) { return [c.level, c.rungs.map(function (r) { return RCODE[r]; }).join('')]; }),
+      sym: [sum.symbolic.right, sum.symbolic.asked], tags: sum.tags,
+      log: log.map(function (r) {
+        var row = [r.id, r.timedOut ? 't' : OCODE[r.outcome], r.seconds, r.answer];
+        if (r.tag) { row.push(r.tag); }
+        return row;
+      })
+    };
+  }
+  function showDone() {
+    clear(app);
+    var json = JSON.stringify(resultData(engine.summary()));
+    var e = encodeURIComponent;
+    var gmail = 'https://mail.google.com/mail/?view=cm&fs=1&to=' + e(S.email_to) + '&su=' + e(S.subject_tag + ' ' + student.name) + '&body=' + e(json);
+    var box = el('textarea', { class: 'copybox', readonly: 'readonly', 'aria-label': 'Your results' });
+    box.value = json;
+    var copied = el('span', { class: 'small', 'aria-live': 'polite' });
+    var fallback = el('p', { class: 'small', hidden: 'hidden', 'aria-live': 'polite', text: 'Didn\'t work? Send it to ' + S.email_to });
+    app.appendChild(el('div', { class: 'card' },
+      el('p', { class: 'eyebrow', text: 'Finished' }),
+      el('h1', { text: 'Send your results' }),
+      el('p', { text: 'Copy the text below and send it to Ken, or press Email Ken.' }),
+      box,
+      el('div', { class: 'row', style: 'margin-top:10px' },
+        el('button', { class: 'primary', text: 'Copy', onclick: function () {
+          box.focus(); box.select();
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(json).then(function () { copied.textContent = 'Copied.'; }, function () { copied.textContent = 'Press Ctrl+C (or Cmd+C) to copy.'; });
+          } else { copied.textContent = 'Press Ctrl+C (or Cmd+C) to copy.'; }
+        } }),
+        el('a', { class: 'btn', href: gmail, target: '_blank', rel: 'noopener', text: 'Email Ken', onclick: function () { fallback.hidden = false; } }),
+        copied),
+      fallback));
+    window.scrollTo(0, 0);
+  }
+
+  // ------------------------------------------------------------ teacher view (#report): paste a student's JSON
+  var MARK = { pass: '✓', fail: '✗', assumed: '(✓)', numonly: '✓*', none: '·' };
+  function ladder(c) { return c.rungs.map(function (r, i) { return (i + 1) + MARK[r]; }).join(' '); }
+  var LEGEND = 'Levels: 1 concept, 2 one-step, 3 multi-step, 4 challenge. ✓ right, ✗ missed, (✓) assumed from a harder right answer, ✓* right with numbers after missing the formula version, · not asked.';
+  function fromData(d) {
+    var band = P.BANDS.filter(function (b) { return b.name === d.band; })[0] || P.BANDS[0];
+    var chapters = P.CHAPTERS.map(function (c, i) {
+      var t = (d.topics || [])[i] || [null, '----'];
+      var s = t[0] === null ? { key: 'nt', label: 'Not tested', plan: 'Not reached (question limit): learn this topic from the start' } : P.STATUS[t[0]];
+      var numOnly = t[1].indexOf('n') >= 0;
+      return { n: c[0], title: c[1], level: t[0], key: s.key, label: s.label, numOnly: numOnly,
+               plan: s.plan + (numOnly ? '. Also practise the general (letters) version of its formulas.' : ''),
+               rungs: t[1].split('').map(function (ch) { return RNAME[ch] || 'none'; }) };
+    });
+    var tags = Object.keys(d.tags || {}).filter(function (k) { return P.TAGS[k]; })
+      .map(function (k) { return { key: k, name: P.TAGS[k].name, say: P.TAGS[k].say, count: d.tags[k] }; })
+      .sort(function (x, y) { return y.count - x.count; });
+    var sym = d.sym || [0, 0];
+    return { band: band, bandIndex: P.BANDS.indexOf(band), chapters: chapters, tags: tags,
+             symbolic: { right: sym[0], asked: sym[1], numOnly: chapters.filter(function (c) { return c.numOnly; }).map(function (c) { return c.n; }) } };
+  }
+  function findings(sum) {
+    var out = [], sy = sum.symbolic, pre = sum.chapters[0];
+    if (pre.level !== null && pre.level <= 1) {
+      out.push({ head: 'Prerequisites', text: 'Calculus and series readiness came out at level ' + pre.level + '. Review differentiation, integration and Taylor series before the ODE and power series topics.' });
+    }
+    if (sy.asked) {
+      var line = sy.right + ' of ' + sy.asked + ' formula (letters) questions right.';
+      if (sy.numOnly.length) {
+        out.push({ head: 'Formulas vs numbers', text: line + ' Solved with numbers but not in general form in: ' +
+          sy.numOnly.map(function (n) { return chTitle[n]; }).join(', ') + '. The gap is symbolic manipulation, not the method.' });
+      } else if (sy.right < sy.asked) {
+        out.push({ head: 'Formulas vs numbers', text: line + ' Each missed formula question was missed with numbers too, so the gap is the method itself.' });
+      } else {
+        out.push({ head: 'Formulas vs numbers', text: line + ' Working in general form is a strength.' });
+      }
+    }
+    sum.tags.forEach(function (t) { out.push({ head: t.name + ' (' + t.count + '×)', text: t.say }); });
+    if (!sum.tags.length) { out.push({ head: 'Slip patterns', text: 'No wrong answer matched a common slip (sign, π, factor of 2, squares, upside-down fraction, vector length).' }); }
+    return out;
+  }
+  function keyNode(item) {
+    function m(src, vars) { return mathNode(P.parseExpr(src, vars).ast); }
+    if (item.type === 'mc') { return el('span', { text: item.opts[0] }); }
+    if (item.type === 'num') { return m(item.ans, []); }
+    if (item.type === 'vec') {
+      var s = el('span', { class: 'vecprev' }, '⟨');
+      item.ans.forEach(function (a, j) { if (j) { s.appendChild(document.createTextNode(', ')); } s.appendChild(m(a, [])); });
+      s.appendChild(document.createTextNode('⟩'));
+      return s;
+    }
+    var n = el('span', { class: 'vecprev' }, m(item.key, item.vars));
+    if (item.upToConst) { n.appendChild(document.createTextNode(' + C')); }
+    return n;
+  }
+  function showViewer() {
+    clear(app);
+    var input = el('textarea', { class: 'copybox', id: 'paste', 'aria-label': 'Student results JSON', placeholder: '{"exam":"' + S.exam + '", ...}' });
+    var err = el('div', { class: 'msg err' });
+    var out = el('div');
+    app.appendChild(el('div', { class: 'card' },
+      el('p', { class: 'eyebrow', text: 'Teacher view' }),
+      el('h1', { text: 'Read a result' }),
+      el('label', { for: 'paste', text: 'Paste the student\'s results' }), input, err,
+      el('div', { class: 'row' }, el('button', { class: 'primary', text: 'Show report', onclick: function () {
+        var raw = input.value, a = raw.indexOf('{'), b = raw.lastIndexOf('}'), d = null;
+        try { d = JSON.parse(raw.slice(a, b + 1)); } catch (e) { d = null; }
+        if (!d || d.exam !== S.exam) { err.textContent = 'That does not look like results from this exam.'; return; }
+        err.textContent = ''; clear(out); out.appendChild(renderReport(d));
+      } }))));
+    app.appendChild(out);
+  }
+  function renderReport(d) {
+    var sum = fromData(d);
+    var meter = el('div', { class: 'meter' }, P.BANDS.map(function (b, i) { return el('span', { class: i <= sum.bandIndex ? 'on' : '' }); }));
+    var meterLabels = el('div', { class: 'meter-labels' }, P.BANDS.map(function (b) { return el('span', { text: b.name }); }));
+    var rows = sum.chapters.map(function (c) {
+      return el('tr', null, el('td', { class: 'num', text: String(c.n) }), el('td', { text: c.title }),
+        el('td', null, chip(c.key, c.label)), el('td', { text: c.plan }), el('td', { class: 'ladder small', text: ladder(c) }));
+    });
+    var RES = { c: ['right', 'Right'], w: ['wrong', 'Missed'], s: ['skipped', 'Skipped'], t: ['skipped', 'Timed out'] };
+    var logRows = (d.log || []).map(function (r, i) {
+      var item = byId[r[0]];
+      if (!item) { return el('tr', null, el('td', { class: 'num', text: String(i + 1) }), el('td', { colspan: '6', text: 'Unknown question ' + r[0] })); }
+      var res = RES[r[1]] || RES.s;
+      return el('tr', null, el('td', { class: 'num', text: String(i + 1) }),
+        el('td', { class: 'small', text: item.id + (item.type === 'sym' ? ' (formula)' : '') }),
+        el('td', { text: item.q }), el('td', { class: 'mono', text: r[3] || '—' }), el('td', null, keyNode(item)),
+        el('td', null, chip(res[0], res[1]), r[4] && P.TAGS[r[4]] ? el('div', { style: 'margin-top:4px' }, chip('tag', P.TAGS[r[4]].name)) : null),
+        el('td', { class: 'small num', text: r[2] + 's' }));
+    });
+    return el('div', { class: 'card' },
+      el('p', { class: 'eyebrow', text: (d.date || '').replace('T', ' ').replace('Z', ' UTC') + ' · id ' + d.id }),
+      el('h1', { text: d.name || '(no name)' }),
+      el('p', { class: 'small', text: 'Time ' + clock(d.seconds || 0) + ' · ' + (d.log || []).length + ' questions · ' + (d.switches || 0) + ' window switches' }),
+      el('div', { class: 'band' },
+        el('span', { class: 'small', text: 'Overall level · average ' + (+d.avg).toFixed(2) + ' of 4' }),
+        el('span', { class: 'name', text: sum.band.name }),
+        el('span', { text: sum.band.say }), meter, meterLabels),
+      el('h2', { text: 'What to work on' }),
+      el('ul', { class: 'findings' }, findings(sum).map(function (f) { return el('li', null, el('b', { text: f.head }), f.text); })),
+      el('h2', { text: 'Topics' }),
+      el('p', { class: 'small', text: LEGEND }),
+      el('div', { class: 'tablewrap' }, el('table', null,
+        el('tr', null, ['#', 'Topic', 'Result', 'What to do', 'Levels'].map(function (h) { return el('th', { text: h }); })), rows)),
+      el('h2', { text: 'Answers' }),
+      el('div', { class: 'tablewrap' }, el('table', null,
+        el('tr', null, ['#', 'Item', 'Question', 'Typed', 'Correct', 'Result', 'Time'].map(function (h) { return el('th', { text: h }); })), logRows)));
+  }
+
+  if (location.hash === '#report') { showViewer(); } else { showStart(); }
+  window.addEventListener('hashchange', function () { if (location.hash === '#report' && !examActive) { showViewer(); } });
+})();
+</script>
+</body>
+</html>
