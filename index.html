@@ -94,6 +94,10 @@ button.quiet { color: var(--muted); }
 .vecprev { display: inline-flex; align-items: center; gap: 2px; font-family: var(--f-math); font-size: 1.2rem; }
 .math sup { font-size: .7em; }
 .mj-inline mjx-container { margin: 0 .1em !important; }
+math-field.mf { flex: 1; min-width: 0; display: block; font-size: 1.3rem; padding: 8px 12px; border: none; background: transparent; color: var(--ink);
+  --caret-color: var(--accent); --selection-background-color: var(--accent-soft); --primary-color: var(--accent); --smart-fence-color: var(--muted); }
+math-field.mf:focus-within { outline: none; background: var(--accent-soft); }
+math-field.mf::part(menu-toggle) { display: none; }
 .prompt .mj-inline svg { vertical-align: middle; }
 .msg { min-height: 1.4em; margin: 6px 0 10px; }
 .msg.err { color: var(--bad); }
@@ -127,6 +131,7 @@ textarea.copybox { width: 100%; height: 8em; font-family: var(--f-mono); font-si
 
 <script>window.MathJax = { startup: { typeset: false }, svg: { fontCache: 'local' } };</script>
 <script async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathlive@0.101.0/dist/mathlive.min.js"></script>
 
 <div id="app"></div>
 
@@ -312,6 +317,7 @@ var Calc3Diag = (function () {
         else { out.push({ t: 'var', v: hit }); }
         i += hit.length; continue;
       }
+      if (ch === '□') { throw new SymErr('Fill in the empty box first.'); }
       if (ch === '=') { throw new SymErr('Type only the answer, without an = sign.'); }
       if (ch === ',') { throw new SymErr('Use a point for decimals, not a comma.'); }
       throw new SymErr('We can\'t read the symbol "' + ch + '".');
@@ -478,6 +484,66 @@ var Calc3Diag = (function () {
       return '';
     }
     return T(n);
+  }
+  // MathLive gives LaTeX; turn it into the plain syntax the graders read (\frac{a}{b} -> ((a)/(b)), v_{0} -> v0, \pi -> pi ...).
+  var L2P_NAMES = { pi: 'pi', theta: 'theta', phi: 'phi', varphi: 'phi', rho: 'rho', omega: 'omega', mu: 'mu', lambda: 'lambda',
+                    ln: 'ln', sin: 'sin', cos: 'cos', tan: 'tan', exp: 'exp', cdot: '*', times: '*', ast: '*', div: '/', Delta: 'd',
+                    exponentialE: 'e', mathrm: '', quad: '', qquad: '' };
+  function latexToPlain(tex) {
+    var s = String(tex || '').replace(/\\placeholder(\[[^\]]*\])?\{[^}]*\}/g, '□'), i = 0;
+    function skip() { while (i < s.length && s.charAt(i) === ' ') { i++; } }
+    function group() {
+      skip();
+      if (s.charAt(i) === '{') { i++; var r = seq('}'); i++; return r; }
+      return token();
+    }
+    function command() {
+      i++;
+      var m = /^([A-Za-z]+|[\s\S])/.exec(s.slice(i)), name = m ? m[0] : '';
+      i += name.length;
+      if (name === 'frac' || name === 'dfrac' || name === 'tfrac') { var a = group(), b = group(); return '((' + a + ')/(' + b + '))'; }
+      if (name === 'sqrt') {
+        skip();
+        if (s.charAt(i) === '[') { var j = s.indexOf(']', i), idx = latexToPlain(s.slice(i + 1, j)); i = j + 1; return '((' + group() + ')^(1/(' + idx + ')))'; }
+        return 'sqrt(' + group() + ')';
+      }
+      if (name === 'operatorname' || name === 'mathrm' || name === 'text' || name === 'textrm' || name === 'mathit' || name === 'mathbf') { return group(); }
+      if (name === 'left' || name === 'right' || name === 'bigl' || name === 'bigr' || name === 'Bigl' || name === 'Bigr') {
+        skip();
+        var c = s.charAt(i); i++;
+        if (c === '\\') { var m2 = /^([A-Za-z]+|[\s\S])/.exec(s.slice(i)); c = m2 ? m2[0] : ''; i += c.length; }
+        if (c === '.') { return ''; }
+        if (c === 'lbrace' || c === '{' || c === 'lbrack' || c === '[') { return '('; }
+        if (c === 'rbrace' || c === '}' || c === 'rbrack' || c === ']') { return ')'; }
+        return c;
+      }
+      if (name === ',' || name === ';' || name === '!' || name === ':' || name === ' ') { return ''; }
+      if (Object.prototype.hasOwnProperty.call(L2P_NAMES, name)) { return L2P_NAMES[name]; }
+      return name;
+    }
+    function token() {
+      var c = s.charAt(i);
+      if (c === '\\') { return command(); }
+      i++;
+      if (c === '^') { return '^(' + group() + ')'; }
+      if (c === '_') { return group().replace(/[^A-Za-z0-9]/g, ''); }
+      if (c === '{') { var r = seq('}'); i++; return '(' + r + ')'; }
+      return c;
+    }
+    function seq(end) {
+      var out = '';
+      while (i < s.length && s.charAt(i) !== end) { out += token(); }
+      return out;
+    }
+    return seq(null).replace(/\s+/g, '');
+  }
+  // LaTeX for a variable name, for the insert buttons (v0 -> v_{0}, omega -> \omega, dT -> \Delta T).
+  var VARTEX = { theta: '\\theta', phi: '\\phi', rho: '\\rho', omega: '\\omega', mu: '\\mu', lambda: '\\lambda', dT: '\\Delta T', an: 'a_n' };
+  function varTex(name, units) {
+    if (units) { return '\\mathrm{' + name + '}'; }
+    if (VARTEX[name]) { return VARTEX[name]; }
+    var m = /^([A-Za-z])([A-Za-z0-9]+)$/.exec(name);
+    return m ? m[1] + '_{' + m[2] + '}' : name;
   }
   function valueOf(src) { var p = parseExpr(src, []); if (p.error) { throw new Error('Bad key ' + src + ': ' + p.error); } return evalAst(p.ast, {}); }
 
@@ -686,7 +752,7 @@ var Calc3Diag = (function () {
 
   return { CHAPTERS: CHAPTERS, ITEMS: ITEMS, SETTINGS: SETTINGS, STATUS: STATUS, BANDS: BANDS, TAGS: TAGS,
            create: create, grade: grade, gradeNum: gradeNum, gradeVec: gradeVec, gradeSym: gradeSym, fmt: fmt, makeId: makeId,
-           parseExpr: parseExpr, evalAst: evalAst, renderAst: renderAst, renderTex: renderTex, showVar: showVar, samplePoints: samplePoints, diagnose: diagnose };
+           parseExpr: parseExpr, evalAst: evalAst, renderAst: renderAst, renderTex: renderTex, latexToPlain: latexToPlain, varTex: varTex, showVar: showVar, samplePoints: samplePoints, diagnose: diagnose };
 })();
 if (typeof module === 'object' && module.exports) { module.exports = Calc3Diag; }
 </script>
@@ -800,7 +866,27 @@ if (typeof module === 'object' && module.exports) { module.exports = Calc3Diag; 
       }
     }
   }
-  function insertAt(input, text, back) {
+  // MathLive visual math entry (falls back to a plain text box if the library did not load).
+  var HAS_ML = !!(window.customElements && window.customElements.get('math-field'));
+  if (HAS_ML && window.MathfieldElement) { try { window.MathfieldElement.soundsDirectory = null; } catch (e) { /* older MathLive */ } }
+  var OPTEX = { pi: '\\pi', 'sqrt()': '\\sqrt{#0}', e: 'e', 'ln()': '\\ln\\left(#0\\right)', '^2': '^2', '^3': '^3', '^': '^{#0}', '()': '\\left(#0\\right)', '/': '\\frac{#@}{#0}' };
+  function makeField(attrs) {
+    if (!HAS_ML) { return el('input', attrs); }
+    var mf = document.createElement('math-field');
+    if (attrs.id) { mf.id = attrs.id; }
+    if (attrs['aria-label']) { mf.setAttribute('aria-label', attrs['aria-label']); }
+    mf.className = 'mf';
+    try { mf.menuItems = []; } catch (e) { /* older MathLive */ }
+    ['paste', 'drop'].forEach(function (ev) { mf.addEventListener(ev, function (e) { e.preventDefault(); e.stopPropagation(); }, true); });
+    return mf;
+  }
+  function fieldVal(x) { return x && x.tagName === 'MATH-FIELD' ? P.latexToPlain(x.value) : (x ? x.value : ''); }
+  function insertAt(input, text, back, tex) {
+    if (input.tagName === 'MATH-FIELD') {
+      input.insert(tex || (Object.prototype.hasOwnProperty.call(OPTEX, text) ? OPTEX[text] : text), { focus: true, scrollIntoView: true });
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      return;
+    }
     var v = input.value;
     var a = typeof input.selectionStart === 'number' ? input.selectionStart : v.length;
     var b = typeof input.selectionEnd === 'number' ? input.selectionEnd : v.length;
@@ -811,7 +897,7 @@ if (typeof module === 'object' && module.exports) { module.exports = Calc3Diag; 
   }
   function keyRow(target, vars) {
     var b = vars.map(function (v) {
-      return el('button', { type: 'button', title: 'Type ' + v, onclick: function () { insertAt(target(), v); } }, P.showVar(v));
+      return el('button', { type: 'button', title: 'Type ' + v, onclick: function () { insertAt(target(), v, 0, P.varTex(v)); } }, P.showVar(v));
     });
     var ops = [['π', 'pi', 0], ['√( )', 'sqrt()', 1], ['e', 'e', 0], ['ln( )', 'ln()', 1], ['x²', '^2', 0], ['^', '^', 0], ['( )', '()', 1]];
     return el('div', { class: 'keys', 'aria-label': 'Insert symbols' }, b,
@@ -821,9 +907,9 @@ if (typeof module === 'object' && module.exports) { module.exports = Calc3Diag; 
     var isVec = item.type === 'vec', vars = item.type === 'sym' ? item.vars : [];
     var n = isVec ? item.vals.length : 1, inputs = [], last = null;
     var pv = el('div', { class: 'preview', 'aria-live': 'polite' });
-    var refresh = function () { showPreview(pv, inputs.map(function (x) { return x.value; }), vars, isVec); };
+    var refresh = function () { showPreview(pv, inputs.map(fieldVal), vars, isVec); };
     for (var j = 0; j < n; j++) {
-      var inp = el('input', { type: 'text', autocomplete: 'off', autocapitalize: 'off', spellcheck: 'false',
+      var inp = makeField({
         'aria-label': isVec ? 'Component ' + (j + 1) : 'Your answer' });
       inp.addEventListener('input', function () { say(''); refresh(); });
       inp.addEventListener('focus', function (e) { last = e.target; });
@@ -843,9 +929,9 @@ if (typeof module === 'object' && module.exports) { module.exports = Calc3Diag; 
     refresh();
     return {
       node: el('div', null, row, keyRow(function () { return last || inputs[0]; }, vars), pv),
-      value: function () { return isVec ? inputs.map(function (x) { return x.value.trim(); }) : inputs[0].value.trim(); },
-      text: function () { return isVec ? '⟨' + inputs.map(function (x) { return x.value.trim(); }).join(', ') + '⟩' : inputs[0].value.trim(); },
-      empty: function () { return inputs.every(function (x) { return !x.value.trim(); }); },
+      value: function () { return isVec ? inputs.map(function (x) { return fieldVal(x).trim(); }) : fieldVal(inputs[0]).trim(); },
+      text: function () { return isVec ? '⟨' + inputs.map(function (x) { return fieldVal(x).trim(); }).join(', ') + '⟩' : fieldVal(inputs[0]).trim(); },
+      empty: function () { return inputs.every(function (x) { return !fieldVal(x).trim(); }); },
       focus: function () { inputs[0].focus(); }
     };
   }
